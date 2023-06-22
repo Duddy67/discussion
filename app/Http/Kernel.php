@@ -78,5 +78,7 @@ class Kernel extends HttpKernel
         'admin.post.settings' => \App\Http\Middleware\AdminPostSettings::class,
         'admin.menus' => \App\Http\Middleware\AdminMenus::class,
         'admin.menu.items' => \App\Http\Middleware\AdminMenuItems::class,
+        'admin.discussions' => \App\Http\Middleware\AdminDiscussions::class,
+        'admin.discussion.categories' => \App\Http\Middleware\AdminDiscussionCategories::class,
     ];
 }

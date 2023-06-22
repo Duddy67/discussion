@@ -138,6 +138,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
           @endallowto
 
+          @allowto('create-discussion')
+              @php $open = (request()->is('admin/discussion*')) ? 'menu-open' : '' @endphp
+              <li class="nav-item {{ $open }}">
+                  @php $active = (request()->is('admin/discussion*')) ? 'active' : '' @endphp
+                  <a href="#" class="nav-link {{ $active }}">
+                    <i class="nav-icon fas fa-pencil-alt"></i>
+                    <p>@lang ('labels.title.discussions')<i class="right fas fa-angle-left"></i></p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                          @php $active = (request()->is('admin/discussions*')) ? true : false @endphp
+                          <x-menu-item href="{{ route('admin.discussions.index') }}" :sub=true :active="$active">
+                            @lang ('labels.title.discussions')
+                          </x-menu-item>
+                      @allowto('create-post-category')
+                          @php $active = (request()->is('admin/discussion/categories*')) ? true : false @endphp
+                          <x-menu-item href="{{ route('admin.discussion.categories.index') }}" :sub=true :active="$active">
+                            @lang ('labels.title.categories')
+                          </x-menu-item>
+                      @endallowto
+                  </ul>
+              </li>
+          @endallowto
+
           @allowto('create-post')
               @php $open = (request()->is('admin/post*')) ? 'menu-open' : '' @endphp
               <li class="nav-item {{ $open }}">

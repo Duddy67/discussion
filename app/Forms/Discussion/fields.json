@@ -1,0 +1,134 @@
+[
+  {
+    "label": "labels.generic.title",
+    "type": "text",
+    "name": "title",
+    "id": "title",
+    "placeholder": "labels.generic.title"
+  },
+  {
+    "label": "labels.generic.slug",
+    "type": "text",
+    "name": "slug",
+    "id": "slug",
+    "tab": "details",
+    "placeholder": "labels.generic.slug"
+  },
+  {
+    "label": "labels.generic.description",
+    "type": "textarea",
+    "name": "description",
+    "class": "tinymce-texteditor",
+    "id": "description"
+  },
+  {
+    "label": "labels.discussion.discussion_date",
+    "type": "date",
+    "name": "discussion_date",
+    "dataset": {"date":"0", "time":"0"},
+    "id": "discussion_date"
+  },
+  {
+    "label": "labels.discussion.max_attendees",
+    "type": "select",
+    "name": "max_attendees",
+    "id": "max_attendees",
+    "blank": "labels.generic.select_option",
+    "options": [] 
+  },
+  {
+    "label": "labels.discussion.is_private",
+    "type": "select",
+    "name": "is_private",
+    "id": "is_private",
+    "extra": ["yes_no"],
+    "options": [] 
+  },
+  {
+    "label": "labels.discussion.registering_alert",
+    "type": "select",
+    "name": "registering_alert",
+    "id": "registering_alert",
+    "extra": ["yes_no"],
+    "options": [] 
+  },
+  {
+    "label": "labels.discussion.comment_alert",
+    "type": "select",
+    "name": "comment_alert",
+    "id": "comment_alert",
+    "extra": ["yes_no"],
+    "options": [] 
+  },
+  {
+    "label": "labels.discussion.discussion_link",
+    "type": "text",
+    "name": "discussion_link",
+    "id": "discussion_link",
+    "placeholder": "labels.discussion.discussion_link"
+  },
+  {
+    "label": "labels.generic.status",
+    "type": "select",
+    "name": "status",
+    "id": "status",
+    "blank": "labels.generic.select_option",
+    "options": [] 
+  },
+  {
+    "label": "labels.generic.access_level",
+    "type": "select",
+    "name": "access_level",
+    "id": "access_level",
+    "blank": "labels.generic.select_option",
+    "options": [] 
+  },
+  {
+    "label": "labels.generic.owned_by",
+    "type": "select",
+    "name": "owned_by",
+    "id": "owned_by",
+    "blank": "labels.generic.select_option",
+    "options": [] 
+  },
+  {
+    "label": "labels.generic.owned_by",
+    "type": "text",
+    "name": "owner_name",
+    "id": "owner_name",
+    "extra": ["disabled"]
+  },
+  {
+    "label": "labels.user.groups",
+    "type": "select",
+    "name": "groups",
+    "extra": ["multiple","title_as_id"],
+    "id": "groups",
+    "class": "_locked",
+    "blank": "labels.generic.select_option",
+    "options": [] 
+  },
+  {
+    "label": "labels.generic.created_at",
+    "type": "date",
+    "name": "created_at",
+    "dataset": {"date":"0", "time":"0"},
+    "id": "created_at",
+    "extra": ["disabled"]
+  },
+  {
+    "label": "labels.generic.updated_by",
+    "type": "text",
+    "name": "updated_by",
+    "id": "updated_by",
+    "extra": ["disabled"]
+  },
+  {
+    "label": "labels.generic.updated_at",
+    "type": "date",
+    "name": "updated_at",
+    "dataset": {"date":"0", "time":"0"},
+    "id": "updated_at",
+    "extra": ["disabled"]
+  }
+]

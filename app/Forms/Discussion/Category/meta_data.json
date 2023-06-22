@@ -1,0 +1,73 @@
+[
+  {
+    "label": "labels.generic.meta_page_title",
+    "type": "text",
+    "name": "meta_page_title",
+    "id": "meta_page_title",
+    "tab": "meta_data",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.meta_name_description",
+    "type": "textarea",
+    "name": "meta_name_description",
+    "id": "meta_name_description",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.meta_name_robots",
+    "type": "text",
+    "name": "meta_name_robots",
+    "id": "meta_name_robots",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.meta_og_title",
+    "type": "text",
+    "name": "meta_og_title",
+    "id": "meta_og_title",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.meta_og_description",
+    "type": "textarea",
+    "name": "meta_og_description",
+    "id": "meta_og_description",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.meta_og_type",
+    "type": "text",
+    "name": "meta_og_type",
+    "id": "meta_og_type",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.meta_og_image",
+    "type": "text",
+    "name": "meta_og_image",
+    "id": "meta_og_image",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.meta_og_url",
+    "type": "text",
+    "name": "meta_og_url",
+    "id": "meta_og_url",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.meta_og_local",
+    "type": "text",
+    "name": "meta_og_local",
+    "id": "meta_og_local",
+    "group": "meta_data"
+  },
+  {
+    "label": "labels.generic.canonical_link",
+    "type": "text",
+    "name": "canonical_link",
+    "id": "canonical_link",
+    "group": "meta_data"
+  }
+]
