@@ -83,7 +83,7 @@ class DiscussionController extends Controller
      */
     public function edit(Request $request, int $id)
     {
-        $discussion = $this->item = Post::select('discussions.*', 'users.name as owner_name', 'users2.name as modifier_name')
+        $discussion = $this->item = Discussion::select('discussions.*', 'users.name as owner_name', 'users2.name as modifier_name')
                                     ->leftJoin('users', 'discussions.owned_by', '=', 'users.id')
                                     ->leftJoin('users as users2', 'discussions.updated_by', '=', 'users2.id')
                                     ->findOrFail($id);
@@ -124,6 +124,74 @@ class DiscussionController extends Controller
         }
 
         return redirect()->route('admin.discussions.index', $request->query());
+    }
+
+    /**
+     * Update the specified discussion. (AJAX)
+     *
+     * @param  \App\Http\Requests\Discussion\UpdateRequest  $request
+     * @param  \App\Models\Discussion $discussion
+     * @return JSON
+     */
+    public function update(UpdateRequest $request, Discussion $discussion)
+    {
+        if ($discussion->checked_out != auth()->user()->id) {
+            $request->session()->flash('error', __('messages.generic.user_id_does_not_match'));
+            return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
+        }
+
+        if (!$discussion->canEdit()) {
+            $request->session()->flash('error', __('messages.generic.edit_not_auth'));
+            return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
+        }
+
+        $discussion->title = $request->input('title');
+        $discussion->slug = Str::slug($request->input('title'), '-').'-'.$discussion->id;
+        $discussion->description = $request->input('description');
+        //$discussion->page = $request->input('page');
+        //$discussion->meta_data = $request->input('meta_data');
+        //$discussion->extra_fields = $request->input('extra_fields');
+        $discussion->settings = $request->input('settings');
+        $discussion->updated_by = auth()->user()->id;
+        //$layoutRefresh = LayoutItem::storeItems($discussion);
+        // Prioritize layout items over regular content when storing raw content.
+        //$discussion->raw_content = ($discussion->layoutItems()->exists()) ? $discussion->getLayoutRawContent() : strip_tags($request->input('content'));
+
+        if ($discussion->canChangeAccessLevel()) {
+            $discussion->access_level = $request->input('access_level');
+
+            // N.B: Get also the private groups (if any) that are not returned by the form as they're disabled.
+            $groups = array_merge($request->input('groups', []), Group::getPrivateGroups($discussion));
+
+            if (!empty($groups)) {
+                $discussion->groups()->sync($groups);
+            }
+            else {
+                // Remove all groups for this discussion.
+                $discussion->groups()->sync([]);
+            }
+        }
+
+        if ($discussion->canChangeAttachments()) {
+            $discussion->owned_by = $request->input('owned_by');
+        }
+
+        if ($discussion->canChangeStatus()) {
+            $discussion->status = $request->input('status');
+        }
+
+        $discussion->save();
+
+        $refresh = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
+
+        if ($request->input('_close', null)) {
+            $discussion->checkIn();
+            // Store the message to be displayed on the list view after the redirect.
+            $request->session()->flash('success', __('messages.discussion.update_success'));
+            return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
+        }
+
+        return response()->json(['success' => __('messages.discussion.update_success'), 'refresh' => $refresh]);
     }
 
 }

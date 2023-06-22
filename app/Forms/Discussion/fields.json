@@ -7,14 +7,6 @@
     "placeholder": "labels.generic.title"
   },
   {
-    "label": "labels.generic.slug",
-    "type": "text",
-    "name": "slug",
-    "id": "slug",
-    "tab": "details",
-    "placeholder": "labels.generic.slug"
-  },
-  {
     "label": "labels.generic.description",
     "type": "textarea",
     "name": "description",

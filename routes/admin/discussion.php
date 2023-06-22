@@ -23,4 +23,7 @@ Route::get('/discussion/categories/{category}/down', [AdminDiscussionCategoryCon
 Route::get('/discussion/categories/{category}/edit', [AdminDiscussionCategoryController::class, 'edit'])->name('admin.discussion.categories.edit');
 Route::delete('/discussion/categories/{category}/delete-image', [AdminDiscussionCategoryController::class, 'deleteImage'])->name('admin.discussion.categories.deleteImage');
 Route::resource('discussion/categories', AdminDiscussionCategoryController::class, ['as' => 'admin.discussion'])->except(['show', 'edit']);
+// Settings
+Route::get('/discussion/settings', [AdminDiscussionSettingController::class, 'index'])->name('admin.discussion.settings.index');
+Route::patch('/discussion/settings', [AdminDiscussionSettingController::class, 'update'])->name('admin.discussion.settings.update');
 

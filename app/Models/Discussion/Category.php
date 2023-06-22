@@ -166,14 +166,14 @@ class Category extends Model
                           ->orWhere('discussions.owned_by', auth()->user()->id);
                 });
 
-                /*$groupIds = auth()->user()->getGroupIds();
+                $groupIds = auth()->user()->getGroupIds();
 
                 if (!empty($groupIds)) {
                     // Check for access through groups.
                     $query->orWhereHas('groups', function ($query)  use ($groupIds) {
                         $query->whereIn('id', $groupIds);
                     });
-                }*/
+                }
             });
         }
         else {
@@ -243,5 +243,55 @@ class Category extends Model
         return $options;
     }
 
+    public function getOwnedByOptions()
+    {
+        $users = auth()->user()->getAssignableUsers(['assistant', 'registered']);
+        $options = [];
 
+        foreach ($users as $user) {
+            $extra = [];
+
+            // The user is a manager who doesn't or no longer have the create-post-category permission.
+            if ($user->getRoleType() == 'manager' && !$user->can('create-post-category')) {
+                // The user owns this category.
+                // N.B: A new owner will be required when updating this category.
+                if ($this->id && $this->access_level != 'private') {
+                    // Don't show this user.
+                    continue;
+                }
+
+                // If the user owns a private category his name will be shown until the category is no longer private.
+            }
+
+            $options[] = ['value' => $user->id, 'text' => $user->name, 'extra' => $extra];
+        }
+
+        return $options;
+    }
+
+    /*public function getSettings()
+    {
+        return PostSetting::getItemSettings($this, 'categories');
+    }
+
+    public function getPostOrderingOptions()
+    {
+        return PostSetting::getPostOrderingOptions();
+    }*/
+
+    /*
+     * Generic function that returns model values which are handled by select inputs.
+     */
+    public function getSelectedValue(\stdClass $field): mixed
+    {
+        if ($field->name == 'groups') {
+            return $this->groups->pluck('id')->toArray();
+        }
+
+        if (isset($field->group) && $field->group == 'settings') {
+            return (isset($this->settings[$field->name])) ? $this->settings[$field->name] : null;
+        }
+
+        return $this->{$field->name};
+    }
 }

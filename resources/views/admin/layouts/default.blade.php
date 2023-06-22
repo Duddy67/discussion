@@ -157,6 +157,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             @lang ('labels.title.categories')
                           </x-menu-item>
                       @endallowto
+                      @allowto('discussion-settings')
+                          @php $active = (request()->is('admin/discussion/settings*')) ? true : false @endphp
+                          <x-menu-item href="{{ route('admin.discussion.settings.index') }}" :sub=true :active="$active">
+                            @lang ('labels.title.settings')
+                          </x-menu-item>
+                      @endallowto
                   </ul>
               </li>
           @endallowto

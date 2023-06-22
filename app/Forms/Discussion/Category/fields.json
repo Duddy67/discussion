@@ -134,15 +134,6 @@
     "options": [] 
   },
   {
-    "label": "labels.post.show_post_excerpt",
-    "type": "select",
-    "name": "show_post_excerpt",
-    "id": "show_post_excerpt",
-    "extra": ["yes_no", "global_setting"],
-    "group": "settings",
-    "options": [] 
-  },
-  {
     "label": "labels.post.show_post_image",
     "type": "select",
     "name": "show_post_image",
