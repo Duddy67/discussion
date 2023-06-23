@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Discussion\Category;
 use App\Models\Discussion\Subscription;
+use App\Traits\AccessLevel;
+use App\Traits\CheckInCheckOut;
 
 class Discussion extends Model
 {
-    use HasFactory;
+    use HasFactory, AccessLevel, CheckInCheckOut;
 
     /**
      * The attributes that are mass assignable.
@@ -21,10 +23,12 @@ class Discussion extends Model
         //'slug',
         'status',
         'owned_by',
-        'category_id',
+        'access_level',
+        //'category_id',
         'description',
         'discussion_date',
         'discussion_link',
+        'max_attendees',
         'is_private',
         'registering_alert',
         'comment_alert',
@@ -41,10 +45,12 @@ class Discussion extends Model
         'discussion_date',
     ];
 
+    const MAX_ATTENDEES = 10;
+
     /**
      * Get the category that owns the discussion.
      */
-    public function category(): BelongsTo
+    public function category() //: BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
@@ -86,11 +92,11 @@ class Discussion extends Model
             $query->whereIn('discussions.owned_by', $ownedBy);
         }
 
-        /*if (!empty($groups)) {
+        if (!empty($groups)) {
             $query->whereHas('groups', function($query) use($groups) {
                 $query->whereIn('id', $groups);
             });
-        }*/
+        }
 
         $query->where(function($query) {
             $query->where('roles.role_level', '<', auth()->user()->getRoleLevel())
@@ -98,31 +104,69 @@ class Discussion extends Model
                   ->orWhere('discussions.owned_by', auth()->user()->id);
         });
 
-        /*$groupIds = auth()->user()->getGroupIds();
+        $groupIds = auth()->user()->getGroupIds();
 
-        if(!empty($groupIds)) {
+        if (!empty($groupIds)) {
             $query->orWhereHas('groups', function ($query)  use ($groupIds) {
                 $query->whereIn('id', $groupIds);
             });
-        }*/
+        }
 
         return $query->paginate($perPage);
     }
 
     public function getMaxAttendeesOptions()
     {
-        return [
-            ['value' => 1, 'text' => 1],
-            ['value' => 2, 'text' => 2],
-            ['value' => 3, 'text' => 3],
-            ['value' => 4, 'text' => 4],
-            ['value' => 5, 'text' => 5],
-            ['value' => 6, 'text' => 6],
-            ['value' => 7, 'text' => 7],
-            ['value' => 8, 'text' => 8],
-            ['value' => 9, 'text' => 9],
-            ['value' => 10, 'text' => 10],
-        ];
+        $options = [];
+
+        for ($i = 0; $i < self::MAX_ATTENDEES; $i++) {
+            $options[] = ['value' => $i + 1, 'text' => $i + 1];
+        }
+
+        return $options;
+    }
+
+    public function getCategoryOptions()
+    {
+        $nodes = Category::get()->toTree();
+        $options = [];
+        $userGroupIds = auth()->user()->getGroupIds();
+
+        $traverse = function ($categories, $prefix = '-') use (&$traverse, &$options, $userGroupIds) {
+            foreach ($categories as $category) {
+                // Check wether the current user groups match the category groups (if any).
+                $belongsToGroups = (!empty(array_intersect($userGroupIds, $category->getGroupIds()))) ? true : false;
+                // Set the category option accordingly.
+                $extra = ($category->access_level == 'private' && $category->owned_by != auth()->user()->id && !$belongsToGroups) ? ['disabled'] : [];
+                $options[] = ['value' => $category->id, 'text' => $prefix.' '.$category->name, 'extra' => $extra];
+
+                $traverse($category->children, $prefix.'-');
+            }
+        };
+
+        $traverse($nodes);
+
+        return $options;
+    }
+
+    /*
+     * Generic function that returns model values which are handled by select inputs. 
+     */
+    public function getSelectedValue(\stdClass $field): mixed
+    {
+        if ($field->name == 'groups') {
+            return $this->groups->pluck('id')->toArray();
+        }
+
+        /*if ($field->name == 'categories') {
+            return $this->categories->pluck('id')->toArray();
+        }*/
+
+        if (isset($field->group) && $field->group == 'settings') {
+            return (isset($this->settings[$field->name])) ? $this->settings[$field->name] : null;
+        }
+
+        return $this->{$field->name};
     }
 
 }

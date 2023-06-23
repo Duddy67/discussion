@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Discussion;
+use App\Models\Discussion\Category;
 use App\Models\User;
 use App\Models\Setting;
 use App\Traits\Form;
 use Carbon\Carbon;
+use App\Http\Requests\Discussion\StoreRequest;
+use App\Http\Requests\Discussion\UpdateRequest;
+use Illuminate\Support\Str;
 
 class DiscussionController extends Controller
 {
@@ -148,7 +152,6 @@ class DiscussionController extends Controller
         $discussion->title = $request->input('title');
         $discussion->slug = Str::slug($request->input('title'), '-').'-'.$discussion->id;
         $discussion->description = $request->input('description');
-        //$discussion->page = $request->input('page');
         //$discussion->meta_data = $request->input('meta_data');
         //$discussion->extra_fields = $request->input('extra_fields');
         $discussion->settings = $request->input('settings');
@@ -181,6 +184,7 @@ class DiscussionController extends Controller
         }
 
         $discussion->save();
+        $discussion->category()->save($request->input('category'));
 
         $refresh = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
 
@@ -192,6 +196,50 @@ class DiscussionController extends Controller
         }
 
         return response()->json(['success' => __('messages.discussion.update_success'), 'refresh' => $refresh]);
+    }
+
+    /**
+     * Store a new discussion. (AJAX)
+     *
+     * @param  \App\Http\Requests\Discussion\StoreRequest  $request
+     * @return JSON 
+     */
+    public function store(StoreRequest $request)
+    {
+        $discussion = Discussion::create([
+            'title' => $request->input('title'), 
+            'status' => $request->input('status'), 
+            'description' => $request->input('description'), 
+            'access_level' => $request->input('access_level'), 
+            'owned_by' => $request->input('owned_by'),
+            'meta_data' => $request->input('meta_data'),
+            'settings' => $request->input('settings'),
+            'discussion_link' => $request->input('discussion_link'),
+            'registering_alert' => $request->input('registering_alert'),
+            'comment_alert' => $request->input('comment_alert'),
+            'max_attendees' => $request->input('max_attendees'),
+        ]);
+
+        $discussion->slug = Str::slug($discussion->title, '-').'-'.$discussion->id;
+        //$discussion->updated_by = auth()->user()->id;
+
+        $discussion->save();
+
+        $category = Category::find($request->input('category'));
+        $category->discussions()->save($discussion);
+
+        if ($request->input('groups') !== null) {
+            $discussion->groups()->attach($request->input('groups'));
+        }
+
+        $request->session()->flash('success', __('messages.discussion.create_success'));
+
+        if ($request->input('_close', null)) {
+            return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
+        }
+
+        // Redirect to the edit form.
+        return response()->json(['redirect' => route('admin.discussions.edit', array_merge($request->query(), ['discussion' => $discussion->id]))]);
     }
 
 }
