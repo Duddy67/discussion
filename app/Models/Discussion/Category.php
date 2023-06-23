@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Discussion;
 use App\Models\Cms\Document;
 use App\Models\Setting;
+use App\Models\User\Group;
+use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Traits\Node;
 use App\Traits\TreeAccessLevel;
 use App\Traits\CheckInCheckOut;
@@ -37,6 +39,8 @@ class Category extends Model
         'access_level',
         'parent_id',
         'meta_data',
+        'alt_img',
+        'settings',
     ];
 
     /**
@@ -57,6 +61,7 @@ class Category extends Model
      */
     protected $casts = [
         'meta_data' => 'array',
+        'settings' => 'array',
     ];
 
     /**
@@ -65,6 +70,14 @@ class Category extends Model
     public function discussions(): HasMany
     {
         return $this->hasMany(Discussion::class);
+    }
+
+    /**
+     * The groups that belong to the category.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'discussion_category_group');
     }
 
     /**
@@ -269,15 +282,15 @@ class Category extends Model
         return $options;
     }
 
-    /*public function getSettings()
+    public function getSettings()
     {
-        return PostSetting::getItemSettings($this, 'categories');
+        return DiscussionSetting::getItemSettings($this, 'categories');
     }
 
-    public function getPostOrderingOptions()
+    public function getDiscussionOrderingOptions()
     {
-        return PostSetting::getPostOrderingOptions();
-    }*/
+        return DiscussionSetting::getDiscussionOrderingOptions();
+    }
 
     /*
      * Generic function that returns model values which are handled by select inputs.

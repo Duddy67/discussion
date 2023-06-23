@@ -54,6 +54,16 @@
     "extra": ["disabled"]
   },
   {
+    "label": "labels.user.groups",
+    "type": "select",
+    "name": "groups",
+    "extra": ["multiple","title_as_id"],
+    "id": "groups",
+    "class": "_locked",
+    "blank": "labels.generic.select_option",
+    "options": [] 
+  },
+  {
     "label": "labels.generic.created_at",
     "type": "date",
     "name": "created_at",
@@ -134,20 +144,29 @@
     "options": [] 
   },
   {
-    "label": "labels.post.show_post_image",
+    "label": "labels.generic.show_image",
     "type": "select",
-    "name": "show_post_image",
-    "id": "show_post_image",
+    "name": "show_image",
+    "id": "show_image",
     "extra": ["yes_no", "global_setting"],
     "group": "settings",
     "options": [] 
   },
   {
-    "label": "labels.post.show_post_categories",
+    "label": "labels.discussion.show_discussion_category",
     "type": "select",
-    "name": "show_post_categories",
-    "id": "show_post_categories",
+    "name": "show_discussion_category",
+    "id": "show_discussion_category",
     "extra": ["yes_no", "global_setting"],
+    "group": "settings",
+    "options": [] 
+  },
+  {
+    "label": "labels.discussion.discussion_ordering",
+    "type": "select",
+    "name": "discussion_ordering",
+    "id": "discussion_ordering",
+    "extra": ["global_setting"],
     "group": "settings",
     "options": [] 
   }

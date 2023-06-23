@@ -71,6 +71,8 @@ return [
 	'registering_alert' => 'Registering alert',
 	'comment_alert' => 'Comment alert',
 	'discussion_link' => 'Discussion link',
+	'show_discussion_category' => 'Show discussion category',
+	'discussion_ordering' => 'Discussion ordering',
     ],
     'category' => [
 	'create_category' => 'Create a category',

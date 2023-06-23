@@ -41,6 +41,7 @@ class Category extends Model
         'description',
         'access_level',
         'parent_id',
+        'alt_img',
         'extra_fields',
         'meta_data',
         'settings',

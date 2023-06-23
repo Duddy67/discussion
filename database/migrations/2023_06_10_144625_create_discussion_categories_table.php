@@ -19,9 +19,11 @@ return new class extends Migration
             $table->string('slug', 80);
             $table->string('code', 30)->nullable();
             $table->text('description')->nullable();
+            $table->string('alt_img', 250)->nullable();
             $table->char('status', 12);
             $table->char('access_level', 10);
             $table->json('meta_data');
+            $table->json('settings');
 	    $table->nestedSet();
             $table->unsignedBigInteger('checked_out')->nullable();
             $table->timestamp('checked_out_time')->nullable();

@@ -5,7 +5,15 @@ namespace App\Http\Controllers\Admin\Discussion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Discussion\Category;
+use App\Models\User\Group;
+use App\Models\User;
+use App\Models\Setting;
 use App\Traits\Form;
+use App\Models\Cms\Document;
+use App\Traits\CheckInCheckOut;
+use App\Http\Requests\Discussion\Category\StoreRequest;
+use App\Http\Requests\Discussion\Category\UpdateRequest;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -164,10 +172,9 @@ class CategoryController extends Controller
         $category->name = $request->input('name');
         $category->slug = ($request->input('slug')) ? Str::slug($request->input('slug'), '-') : Str::slug($request->input('name'), '-');
         $category->description = $request->input('description');
-        //$category->extra_fields = $request->input('extra_fields');
         $category->alt_img = $request->input('alt_img');
         $category->meta_data = $request->input('meta_data');
-        //$category->settings = $request->input('settings');
+        $category->settings = $request->input('settings');
         $category->updated_by = auth()->user()->id;
 
         if ($category->canChangeAttachments()) {
@@ -176,7 +183,7 @@ class CategoryController extends Controller
                 $category->owned_by = $request->input('owned_by');
             }
 
-            /*$groups = array_merge($request->input('groups', []), Group::getPrivateGroups($category));
+            $groups = array_merge($request->input('groups', []), Group::getPrivateGroups($category));
 
             if (!empty($groups)) {
                 $category->groups()->sync($groups);
@@ -184,7 +191,7 @@ class CategoryController extends Controller
             else {
                 // Remove all groups for this discussion.
                 $category->groups()->sync([]);
-            }*/
+            }
         }
 
         if ($category->canChangeAccessLevel()) {
@@ -287,9 +294,8 @@ class CategoryController extends Controller
             'access_level' => $request->input('access_level'), 
             'owned_by' => $request->input('owned_by'),
             'parent_id' => (empty($request->input('parent_id'))) ? null : $request->input('parent_id'),
-            //'extra_fields' => $request->input('extra_fields'),
             'meta_data' => $request->input('meta_data'),
-            //'settings' => $request->input('settings'),
+            'settings' => $request->input('settings'),
         ]);
 
         if ($category->parent_id) {
@@ -524,18 +530,6 @@ class CategoryController extends Controller
      */
     private function setFieldValues(&$fields, Category $category = null)
     {
-        /*$globalSettings = PostSetting::getDataByGroup('categories');
-
-        foreach ($globalSettings as $key => $value) {
-            if (str_starts_with($key, 'alias_extra_field_')) {
-                foreach ($fields as $field) {
-                    if ($field->name == $key) {
-                        $field->value = ($value) ? $value : __('labels.generic.none');
-                    }
-                }
-            }
-        }*/
-
         if ($category === null) {
             return;
         }
