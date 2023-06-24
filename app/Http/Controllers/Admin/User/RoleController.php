@@ -139,7 +139,7 @@ class RoleController extends Controller
      */
     public function cancel(Request $request, Role $role = null)
     {
-        if ($role) {
+        if ($role && $role->checked_out == auth()->user()->id) {
             $role->checkIn();
         }
 

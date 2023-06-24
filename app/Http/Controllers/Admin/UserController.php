@@ -124,7 +124,7 @@ class UserController extends Controller
      */
     public function cancel(Request $request, User $user = null)
     {
-        if ($user) {
+        if ($user && $user->checked_out == auth()->user()->id) {
             $user->checkIn();
         }
 

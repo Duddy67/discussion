@@ -142,7 +142,7 @@ class ItemController extends Controller
      */
     public function cancel(Request $request, $code, Item $item = null)
     {
-        if ($item) {
+        if ($item && $item->checked_out == auth()->user()->id) {
             $item->checkIn();
         }
 

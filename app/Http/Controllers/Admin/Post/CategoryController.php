@@ -131,7 +131,7 @@ class CategoryController extends Controller
      */
     public function cancel(Request $request, Category $category = null)
     {
-        if ($category) {
+        if ($category && $category->checked_out == auth()->user()->id) {
             $category->checkIn();
         }
 

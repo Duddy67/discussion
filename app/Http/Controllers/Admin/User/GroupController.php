@@ -124,7 +124,7 @@ class GroupController extends Controller
      */
     public function cancel(Request $request, Group $group = null)
     {
-        if ($group) {
+        if ($group && $group->checked_out == auth()->user()->id) {
             $group->checkIn();
         }
 

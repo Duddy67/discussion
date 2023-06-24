@@ -29,14 +29,11 @@ trait CheckInCheckOut
      */
     public function checkIn(): void
     {
-        // First make sure the current user is the user for whom the record is checked out.
-        if (auth()->user()->id == $this->checked_out) {
-            $this->checked_out = null;
-            $this->checked_out_time = null;
-            // Prevent updated_at field to be updated.
-            $this->timestamps = false;
-            $this->save();
-        }
+        $this->checked_out = null;
+        $this->checked_out_time = null;
+        // Prevent updated_at field to be updated.
+        $this->timestamps = false;
+        $this->save();
     }
 
     /**
@@ -99,10 +96,7 @@ trait CheckInCheckOut
         foreach ($recordIds as $id) {
             $record = $model::findOrFail($id);
 
-            if ($record->canCheckIn()) {
-                continue;
-            }
-            else {
+            if (!$record->canCheckIn()) {
                 $messages['error'] = __('messages.generic.check_in_not_auth');
                 continue;
             }

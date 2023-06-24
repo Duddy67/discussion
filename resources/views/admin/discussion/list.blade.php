@@ -31,6 +31,7 @@
     <input type="hidden" id="destroyItems" value="{{ route('admin.discussions.index', $query) }}">
     <input type="hidden" id="publishItems" value="{{ route('admin.discussions.massPublish', $query) }}">
     <input type="hidden" id="unpublishItems" value="{{ route('admin.discussions.massUnpublish', $query) }}">
+    <input type="hidden" id="checkinItems" value="{{ route('admin.discussions.massCheckIn', $query) }}">
 
     <form id="selectedItems" action="{{ route('admin.discussions.index', $query) }}" method="post">
         @method('delete')

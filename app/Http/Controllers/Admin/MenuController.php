@@ -126,7 +126,7 @@ class MenuController extends Controller
      */
     public function cancel(Request $request, Menu $menu = null)
     {
-        if ($menu) {
+        if ($menu && $menu->checked_out == auth()->user()->id) {
             $menu->checkIn();
         }
 

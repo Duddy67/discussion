@@ -9,6 +9,7 @@ Route::delete('/discussions', [AdminDiscussionController::class, 'massDestroy'])
 Route::get('/discussions/cancel/{discussion?}', [AdminDiscussionController::class, 'cancel'])->name('admin.discussions.cancel');
 Route::put('/discussions/publish', [AdminDiscussionController::class, 'massPublish'])->name('admin.discussions.massPublish');
 Route::put('/discussions/unpublish', [AdminDiscussionController::class, 'massUnpublish'])->name('admin.discussions.massUnpublish');
+Route::put('/discussions/checkin', [AdminDiscussionController::class, 'massCheckIn'])->name('admin.discussions.massCheckIn');
 Route::get('/discussions/{discussion}/edit', [AdminDiscussionController::class, 'edit'])->name('admin.discussions.edit');
 Route::delete('/discussions/{discussion}/delete-image', [AdminDiscussionController::class, 'deleteImage'])->name('admin.discussions.deleteImage');
 Route::resource('discussions', AdminDiscussionController::class, ['as' => 'admin'])->except(['show', 'edit']);

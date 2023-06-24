@@ -136,7 +136,8 @@ class PostController extends Controller
      */
     public function cancel(Request $request, Post $post = null)
     {
-        if ($post) {
+        // Make sure the current user is the user for whom the record is checked out.
+        if ($post && $post->checked_out == auth()->user()->id) {
             $post->checkIn();
         }
 

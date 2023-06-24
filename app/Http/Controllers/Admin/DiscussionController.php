@@ -10,6 +10,7 @@ use App\Models\Discussion\Category;
 use App\Models\User;
 use App\Models\Setting;
 use App\Traits\Form;
+use App\Traits\CheckInCheckOut;
 use Carbon\Carbon;
 use App\Http\Requests\Discussion\StoreRequest;
 use App\Http\Requests\Discussion\UpdateRequest;
@@ -123,7 +124,7 @@ class DiscussionController extends Controller
      */
     public function cancel(Request $request, Discussion $discussion = null)
     {
-        if ($discussion) {
+        if ($discussion && $discussion->checked_out == auth()->user()->id) {
             $menu->checkIn();
         }
 
@@ -241,5 +242,203 @@ class DiscussionController extends Controller
         // Redirect to the edit form.
         return response()->json(['redirect' => route('admin.discussions.edit', array_merge($request->query(), ['discussion' => $discussion->id]))]);
     }
+
+    /**
+     * Remove the specified discussion from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Discussion $discussion
+     * @return Response
+     */
+    public function destroy(Request $request, Discussion $discussion)
+    {
+        if (!$discussion->canDelete()) {
+            return redirect()->route('admin.discussions.edit', array_merge($request->query(), ['discussion' => $discussion->id]))->with('error',  __('messages.generic.delete_not_auth'));
+        }
+
+        $name = $discussion->name;
+        $discussion->delete();
+
+        return redirect()->route('admin.discussions.index', $request->query())->with('success', __('messages.discussion.delete_success', ['name' => $name]));
+    }
+
+    /**
+     * Removes one or more discussions from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return Response
+     */
+    public function massDestroy(Request $request)
+    {
+        $deleted = 0;
+
+        // Remove the discussions selected from the list.
+        foreach ($request->input('ids') as $id) {
+            $discussion = Discussion::findOrFail($id);
+
+            if (!$discussion->canDelete()) {
+              return redirect()->route('admin.discussions.index', $request->query())->with(
+                  [
+                      'error' => __('messages.generic.delete_not_auth'), 
+                      'success' => __('messages.discussion.delete_list_success', ['number' => $deleted])
+                  ]);
+            }
+
+            $discussion->delete();
+
+            $deleted++;
+        }
+
+        return redirect()->route('admin.discussions.index', $request->query())->with('success', __('messages.discussion.delete_list_success', ['number' => $deleted]));
+    }
+
+    /**
+     * Checks in one or more discussions.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return Response
+     */
+    public function massCheckIn(Request $request)
+    {
+        $messages = CheckInCheckOut::checkInMultiple($request->input('ids'), '\\App\\Models\\Discussion');
+
+        return redirect()->route('admin.discussions.index', $request->query())->with($messages);
+    }
+
+    /**
+     * Show the batch form (into an iframe).
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function batch(Request $request)
+    {
+        $fields = $this->getSpecificFields(['access_level', 'owned_by', 'groups']);
+        $actions = $this->getActions('batch');
+        $query = $request->query();
+        $route = 'admin.discussions';
+
+        return view('admin.share.batch', compact('fields', 'actions', 'query', 'route'));
+    }
+
+    /**
+     * Updates the access_level and owned_by parameters of one or more discussions.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return Response
+     */
+    public function massUpdate(Request $request)
+    {
+        $updates = 0;
+        $messages = [];
+
+        foreach ($request->input('ids') as $key => $id) {
+            $discussion = Discussion::findOrFail($id);
+            $updated = false;
+
+            // Check for authorisation.
+            if (!$discussion->canEdit()) {
+                $messages['error'] = __('messages.generic.mass_update_not_auth');
+                continue;
+            }
+
+            if ($request->input('owned_by') !== null && $discussion->canChangeAttachments()) {
+                $discussion->owned_by = $request->input('owned_by');
+                $updated = true;
+            }
+
+            if ($request->input('access_level') !== null && $discussion->canChangeAccessLevel()) {
+                $discussion->access_level = $request->input('access_level');
+                $updated = true;
+            }
+
+            if ($request->input('groups') !== null && $discussion->canChangeAccessLevel()) {
+                if ($request->input('_selected_groups') == 'add') {
+                    $discussion->groups()->syncWithoutDetaching($request->input('groups'));
+                }
+                else {
+                    // Remove the selected groups from the current groups and get the remaining groups.
+                    $groups = array_diff($discussion->getGroupIds(), $request->input('groups'));
+                    $discussion->groups()->sync($groups);
+                }
+
+                $updated = true;
+            }
+
+            if ($updated) {
+                $discussion->save();
+                $updates++;
+            }
+        }
+
+        if ($updates) {
+            $messages['success'] = __('messages.generic.mass_update_success', ['number' => $updates]);
+        }
+
+        return redirect()->route('admin.discussions.index')->with($messages);
+    }
+
+    /**
+     * Publishes one or more discussions.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return Response
+     */
+    public function massPublish(Request $request)
+    {
+        $published = 0;
+
+        foreach ($request->input('ids') as $id) {
+            $discussion = Discussion::findOrFail($id);
+
+            if (!$discussion->canChangeStatus()) {
+              return redirect()->route('admin.discussions.index', $request->query())->with(
+                  [
+                      'error' => __('messages.generic.mass_publish_not_auth'), 
+                      'success' => __('messages.discussion.publish_list_success', ['number' => $published])
+                  ]);
+            }
+
+            $discussion->status = 'published';
+
+            $discussion->save();
+
+            $published++;
+        }
+
+        return redirect()->route('admin.discussions.index', $request->query())->with('success', __('messages.discussion.publish_list_success', ['number' => $published]));
+    }
+
+    /**
+     * Unpublishes one or more discussions.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return Response
+     */
+    public function massUnpublish(Request $request)
+    {
+        $unpublished = 0;
+
+        foreach ($request->input('ids') as $id) {
+            $discussion = Discussion::findOrFail($id);
+
+            if (!$discussion->canChangeStatus()) {
+              return redirect()->route('admin.discussions.index', $request->query())->with(
+                  [
+                      'error' => __('messages.generic.mass_unpublish_not_auth'), 
+                      'success' => __('messages.discussion.unpublish_list_success', ['number' => $unpublished])
+                  ]);
+            }
+
+            $discussion->status = 'unpublished';
+
+            $discussion->save();
+
+            $unpublished++;
+        }
+
+        return redirect()->route('admin.discussions.index', $request->query())->with('success', __('messages.discussion.unpublish_list_success', ['number' => $unpublished]));
+    }
+
 
 }

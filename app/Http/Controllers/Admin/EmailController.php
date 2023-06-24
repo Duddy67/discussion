@@ -119,7 +119,7 @@ class EmailController extends Controller
      */
     public function cancel(Request $request, Email $email = null)
     {
-        if ($email) {
+        if ($email && $email->checked_out == auth()->user()->id) {
 	    $email->checkIn();
 	}
 
