@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Discussion;
 use App\Models\Discussion\Category;
 use App\Models\User;
+use App\Models\User\Group;
 use App\Models\Setting;
 use App\Traits\Form;
 use App\Traits\CheckInCheckOut;
@@ -106,7 +107,7 @@ class DiscussionController extends Controller
         // Gather the needed data to build the form.
         $except = (auth()->user()->getRoleLevel() > $discussion->getOwnerRoleLevel() || $discussion->owned_by == auth()->user()->id) ? ['owner_name'] : ['owned_by'];
         $fields = $this->getFields($except);
-        $this->setFieldValues($fields, $discussion);
+        //$this->setFieldValues($fields, $discussion);
         $except = (!$discussion->canEdit()) ? ['destroy', 'save', 'saveClose'] : [];
         $actions = $this->getActions('form', $except);
         // Add the id parameter to the query.
@@ -125,7 +126,7 @@ class DiscussionController extends Controller
     public function cancel(Request $request, Discussion $discussion = null)
     {
         if ($discussion && $discussion->checked_out == auth()->user()->id) {
-            $menu->checkIn();
+            $discussion->checkIn();
         }
 
         return redirect()->route('admin.discussions.index', $request->query());
@@ -153,9 +154,15 @@ class DiscussionController extends Controller
         $discussion->title = $request->input('title');
         $discussion->slug = Str::slug($request->input('title'), '-').'-'.$discussion->id;
         $discussion->description = $request->input('description');
+        $discussion->discussion_date = $request->input('_discussion_date');
+        $discussion->discussion_link = $request->input('discussion_link');
+        $discussion->registering_alert = $request->input('registering_alert');
+        $discussion->is_private = $request->input('is_private');
+        $discussion->comment_alert = $request->input('comment_alert');
+        $discussion->max_attendees = $request->input('max_attendees');
         //$discussion->meta_data = $request->input('meta_data');
         //$discussion->extra_fields = $request->input('extra_fields');
-        $discussion->settings = $request->input('settings');
+        //$discussion->settings = $request->input('settings');
         $discussion->updated_by = auth()->user()->id;
         //$layoutRefresh = LayoutItem::storeItems($discussion);
         // Prioritize layout items over regular content when storing raw content.
@@ -185,7 +192,9 @@ class DiscussionController extends Controller
         }
 
         $discussion->save();
-        $discussion->category()->save($request->input('category'));
+        //$discussion->category()->save($request->input('category'));
+        $category = Category::find($request->input('category'));
+        $category->discussions()->save($discussion);
 
         $refresh = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
 
@@ -213,9 +222,10 @@ class DiscussionController extends Controller
             'description' => $request->input('description'), 
             'access_level' => $request->input('access_level'), 
             'owned_by' => $request->input('owned_by'),
-            'meta_data' => $request->input('meta_data'),
+            //'meta_data' => $request->input('meta_data'),
             'settings' => $request->input('settings'),
             'discussion_link' => $request->input('discussion_link'),
+            'discussion_date' => $request->input('_discussion_date'),
             'registering_alert' => $request->input('registering_alert'),
             'comment_alert' => $request->input('comment_alert'),
             'max_attendees' => $request->input('max_attendees'),
@@ -439,6 +449,27 @@ class DiscussionController extends Controller
 
         return redirect()->route('admin.discussions.index', $request->query())->with('success', __('messages.discussion.unpublish_list_success', ['number' => $unpublished]));
     }
+
+    /*
+     * Sets field values specific to the Discussion model.
+     *
+     * @param  Array of stdClass Objects  $fields
+     * @param  \App\Models\Discussion $discussion
+     * @return void
+     */
+    /*private function setFieldValues(array &$fields, Discussion $discussion = null)
+    {
+        $globalSettings = DiscussionSetting::getDataByGroup('discussions');
+        foreach ($globalSettings as $key => $value) {
+            if (str_starts_with($key, 'alias_extra_field_')) {
+                foreach ($fields as $field) {
+                    if ($field->name == $key) {
+                        $field->value = ($value) ? $value : __('labels.generic.none');
+                    }
+                }
+            }
+        }
+    }*/
 
 
 }

@@ -4,6 +4,7 @@ namespace App\Models\Discussion;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Discussion;
 use App\Models\Cms\Document;
 use App\Models\Setting;

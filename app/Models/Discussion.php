@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Discussion\Category;
 use App\Models\Discussion\Subscription;
+use App\Models\User\Group;
 use App\Traits\AccessLevel;
 use App\Traits\CheckInCheckOut;
 
@@ -50,7 +52,7 @@ class Discussion extends Model
     /**
      * Get the category that owns the discussion.
      */
-    public function category() //: BelongsTo
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
@@ -61,6 +63,14 @@ class Discussion extends Model
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * The groups that belong to the discussion.
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
     }
 
     /*
