@@ -140,7 +140,7 @@ class RoleController extends Controller
     public function cancel(Request $request, Role $role = null)
     {
         if ($role && $role->checked_out == auth()->user()->id) {
-            $role->checkIn();
+            $role->safeCheckIn();
         }
 
         return redirect()->route('admin.user.roles.index', $request->query());
@@ -196,7 +196,7 @@ class RoleController extends Controller
         }
 
         if ($request->input('_close', null)) {
-            $role->checkIn();
+            $role->safeCheckIn();
             // Store the message to be displayed on the list view after the redirect.
             $request->session()->flash('success', __('messages.role.update_success'));
             return response()->json(['redirect' => route('admin.user.roles.index', $request->query())]);

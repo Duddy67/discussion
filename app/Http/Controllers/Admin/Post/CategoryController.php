@@ -132,7 +132,7 @@ class CategoryController extends Controller
     public function cancel(Request $request, Category $category = null)
     {
         if ($category && $category->checked_out == auth()->user()->id) {
-            $category->checkIn();
+            $category->safeCheckIn();
         }
 
         return redirect()->route('admin.post.categories.index', $request->query());
@@ -254,7 +254,7 @@ class CategoryController extends Controller
         }
 
         if ($request->input('_close', null)) {
-            $category->checkIn();
+            $category->safeCheckIn();
             // Store the message to be displayed on the list view after the redirect.
             $request->session()->flash('success', __('messages.category.update_success'));
             return response()->json(['redirect' => route('admin.post.categories.index', $request->query())]);

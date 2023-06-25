@@ -37,6 +37,19 @@ trait CheckInCheckOut
     }
 
     /**
+     * Make sure the current user is the user for whom the record is checked out before
+     * checking the given record back in.
+     *
+     * @return void
+     */
+    public function safeCheckIn(): void
+    {
+        if ($this->checked_out == auth()->user()->id) {
+            $this->checkIn();
+        }
+    }
+
+    /**
      * Checks whether the user's session for whom the record is checked out is timed out.
      *
      * @return bool

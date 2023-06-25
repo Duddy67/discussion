@@ -126,7 +126,7 @@ class DiscussionController extends Controller
     public function cancel(Request $request, Discussion $discussion = null)
     {
         if ($discussion && $discussion->checked_out == auth()->user()->id) {
-            $discussion->checkIn();
+            $discussion->safeCheckIn();
         }
 
         return redirect()->route('admin.discussions.index', $request->query());
@@ -199,7 +199,7 @@ class DiscussionController extends Controller
         $refresh = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
 
         if ($request->input('_close', null)) {
-            $discussion->checkIn();
+            $discussion->safeCheckIn();
             // Store the message to be displayed on the list view after the redirect.
             $request->session()->flash('success', __('messages.discussion.update_success'));
             return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);

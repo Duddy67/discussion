@@ -138,7 +138,7 @@ class PostController extends Controller
     {
         // Make sure the current user is the user for whom the record is checked out.
         if ($post && $post->checked_out == auth()->user()->id) {
-            $post->checkIn();
+            $post->safeCheckIn();
         }
 
         return redirect()->route('admin.posts.index', $request->query());
@@ -242,7 +242,7 @@ class PostController extends Controller
         }
 
         if ($request->input('_close', null)) {
-            $post->checkIn();
+            $post->safeCheckIn();
             // Store the message to be displayed on the list view after the redirect.
             $request->session()->flash('success', __('messages.post.update_success'));
             return response()->json(['redirect' => route('admin.posts.index', $request->query())]);
