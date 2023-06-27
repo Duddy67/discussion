@@ -56,7 +56,8 @@ class DiscussionController extends Controller
         $actions = $this->getActions('list');
         $filters = $this->getFilters($request);
         $items = $this->model->getItems($request);
-        $rows = $this->getRows($columns, $items);
+        $rows = $this->getRows($columns, $items, ['category', 'attendees']);
+        $this->setRowValues($rows, $columns, $items);
         $query = $request->query();
         $url = ['route' => 'admin.discussions', 'item_name' => 'discussion', 'query' => $query];
 
@@ -448,6 +449,29 @@ class DiscussionController extends Controller
         }
 
         return redirect()->route('admin.discussions.index', $request->query())->with('success', __('messages.discussion.unpublish_list_success', ['number' => $unpublished]));
+    }
+
+    /*
+     * Sets the row values specific to the Discussion model.
+     *
+     * @param  Array  $rows
+     * @param  Array of stdClass Objects  $columns
+     * @param  \Illuminate\Pagination\LengthAwarePaginator  $discussions
+     * @return void
+     */
+    private function setRowValues(&$rows, $columns, $discussions)
+    {
+        foreach ($discussions as $key => $discussion) {
+            foreach ($columns as $column) {
+                if ($column->name == 'category') {
+                    $rows[$key]->category = $discussion->category->name;
+                }
+
+                if ($column->name == 'attendees') {
+                    $rows[$key]->attendees = $discussion->subscriptions->count().'/'.$discussion->max_attendees;
+                }
+            }
+        }
     }
 
     /*

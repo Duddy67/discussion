@@ -22,11 +22,9 @@ class Discussion extends Model
      */
     protected $fillable = [
         'title',
-        //'slug',
         'status',
         'owned_by',
         'access_level',
-        //'category_id',
         'description',
         'discussion_date',
         'discussion_link',
@@ -168,9 +166,9 @@ class Discussion extends Model
             return $this->groups->pluck('id')->toArray();
         }
 
-        /*if ($field->name == 'categories') {
-            return $this->categories->pluck('id')->toArray();
-        }*/
+        if ($field->name == 'category') {
+            return $this->category_id;
+        }
 
         if (isset($field->group) && $field->group == 'settings') {
             return (isset($this->settings[$field->name])) ? $this->settings[$field->name] : null;

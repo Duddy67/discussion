@@ -14,7 +14,7 @@
     "id": "description"
   },
   {
-    "label": "labels.title.category",
+    "label": "labels.generic.category",
     "type": "select",
     "name": "category",
     "extra": ["title_as_id"],
@@ -43,6 +43,16 @@
     "name": "is_private",
     "id": "is_private",
     "extra": ["yes_no"],
+    "options": [] 
+  },
+  {
+    "label": "labels.user.groups",
+    "type": "select",
+    "name": "groups",
+    "extra": ["multiple","title_as_id"],
+    "id": "groups",
+    "class": "_locked",
+    "blank": "labels.generic.select_option",
     "options": [] 
   },
   {
@@ -100,16 +110,6 @@
     "extra": ["disabled"]
   },
   {
-    "label": "labels.user.groups",
-    "type": "select",
-    "name": "groups",
-    "extra": ["multiple","title_as_id"],
-    "id": "groups",
-    "class": "_locked",
-    "blank": "labels.generic.select_option",
-    "options": [] 
-  },
-  {
     "label": "labels.generic.created_at",
     "type": "date",
     "name": "created_at",
@@ -122,7 +122,8 @@
     "type": "text",
     "name": "updated_by",
     "id": "updated_by",
-    "extra": ["disabled"]
+    "extra": ["disabled"],
+    "placeholder": "labels.generic.no_update"
   },
   {
     "label": "labels.generic.updated_at",

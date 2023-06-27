@@ -12,14 +12,18 @@
     "type": "string"
   },
   {
-    "label": "labels.generic.status",
-    "name": "status",
+    "label": "labels.discussion.discussion_date",
+    "name": "discussion_date",
+    "type": "date"
+  },
+  {
+    "label": "labels.generic.category",
+    "name": "category",
     "type": "string"
   },
   {
-    "label": "labels.generic.access_level",
-    "name": "access_level",
-    "extra": ["sortable"],
+    "label": "labels.generic.status",
+    "name": "status",
     "type": "string"
   },
   {
@@ -28,13 +32,8 @@
     "type": "string"
   },
   {
-    "label": "labels.generic.created_at",
-    "name": "created_at",
-    "type": "date"
-  },
-  {
-    "label": "labels.generic.updated_at",
-    "name": "updated_at",
-    "type": "date"
+    "label": "labels.discussion.attendees",
+    "name": "attendees",
+    "type": "string"
   }
 ]

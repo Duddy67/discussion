@@ -108,6 +108,7 @@ return [
 	'locales' => 'Langues',
 	'alias' => 'Alias',
 	'page' => 'Page',
+	'category' => 'Catégorie',
 	'id' => 'ID',
 	'description' => 'Description',
 	'created_at' => 'Créé le',

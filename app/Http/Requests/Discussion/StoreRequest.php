@@ -25,8 +25,13 @@ class StoreRequest extends FormRequest
     {
         return [
             'title' => 'required',
+            'description' => 'required',
+            'category' => 'required',
+            'discussion_date' => 'required',
+            'discussion_link' => 'required',
+            'max_attendees' => 'required',
             'access_level' => 'required',
-            'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif,svg', 'max:2048', 'dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'],
+            //'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif,svg', 'max:2048', 'dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'],
             'status' => 'required',
             'owned_by' => 'required',
         ];

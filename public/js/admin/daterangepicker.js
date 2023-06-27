@@ -6,6 +6,7 @@
           'singleDatePicker': true,
           'timePicker': true,
           'timePicker24Hour': true,
+          'timePickerIncrement': 15,
           //'autoUpdateInput': false,
           locale: {
               format: 'DD/MM/YYYY HH:mm',
