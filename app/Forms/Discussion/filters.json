@@ -15,6 +15,14 @@
     "options": [] 
   },
   {
+    "label": "labels.generic.category",
+    "type": "select",
+    "name": "category",
+    "id": "filters-category",
+    "blank": "labels.generic.select_option",
+    "options": [] 
+  },
+  {
     "label": "labels.user.groups",
     "type": "select",
     "name": "groups",
@@ -23,7 +31,7 @@
     "options": [] 
   },
   {
-    "label": "labels.filter.owned_by",
+    "label": "labels.discussion.organiser",
     "type": "select",
     "name": "owned_by",
     "extra": ["multiple"],

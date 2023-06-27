@@ -6,8 +6,8 @@
     "type": "string"
   },
   {
-    "label": "labels.generic.title",
-    "name": "title",
+    "label": "labels.discussion.subject",
+    "name": "subject",
     "extra": ["sortable", "linkable"],
     "type": "string"
   },
@@ -27,7 +27,7 @@
     "type": "string"
   },
   {
-    "label": "labels.generic.owned_by",
+    "label": "labels.discussion.organiser",
     "name": "owned_by",
     "type": "string"
   },

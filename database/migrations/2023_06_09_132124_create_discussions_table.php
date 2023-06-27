@@ -15,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('discussions', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 100);
+            $table->string('subject', 100);
             $table->string('slug', 100);
             $table->text('description')->nullable();
             $table->char('access_level', 10);
             $table->char('status', 12);
             $table->unsignedBigInteger('category_id');
             $table->timestamp('discussion_date')->nullable();
+            $table->char('platform', 15);
             $table->string('discussion_link');
             $table->unsignedTinyInteger('max_attendees');
             $table->boolean('is_private')->nullable();

@@ -24,10 +24,11 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required',
+            'subject' => 'required',
             'description' => 'required',
             'category' => 'required',
             'discussion_date' => 'required',
+            'platform' => 'required',
             'discussion_link' => 'required',
             'max_attendees' => 'required',
             'access_level' => 'required',

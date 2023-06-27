@@ -21,7 +21,7 @@ class Discussion extends Model
      * @var array
      */
     protected $fillable = [
-        'title',
+        'subject',
         'status',
         'owned_by',
         'access_level',
@@ -80,7 +80,8 @@ class Discussion extends Model
         $search = $request->input('search', null);
         $sortedBy = $request->input('sorted_by', null);
         $ownedBy = $request->input('owned_by', null);
-        //$groups = $request->input('groups', []);
+        $category = $request->input('category', null);
+        $groups = $request->input('groups', []);
 
         $query = Discussion::query();
         $query->select('discussions.*', 'users.name as owner_name')->leftJoin('users', 'discussions.owned_by', '=', 'users.id');
@@ -88,7 +89,7 @@ class Discussion extends Model
         $query->join('model_has_roles', 'discussions.owned_by', '=', 'model_id')->join('roles', 'roles.id', '=', 'role_id');
 
         if ($search !== null) {
-            $query->where('discussions.title', 'like', '%'.$search.'%');
+            $query->where('discussions.subject', 'like', '%'.$search.'%');
         }
 
         if ($sortedBy !== null) {
@@ -98,6 +99,10 @@ class Discussion extends Model
 
         if ($ownedBy !== null) {
             $query->whereIn('discussions.owned_by', $ownedBy);
+        }
+
+        if ($category !== null) {
+            $query->whereIn('discussions.category_id', [$category]);
         }
 
         if (!empty($groups)) {
@@ -132,6 +137,15 @@ class Discussion extends Model
         }
 
         return $options;
+    }
+
+    public function getPlatformOptions()
+    {
+        return [
+            ['value' => 'zoom', 'text' => __('labels.discussion.zoom')],
+            ['value' => 'skype', 'text' => __('labels.discussion.skype')],
+            ['value' => 'google_meet', 'text' => __('labels.discussion.google_meet')],
+        ];
     }
 
     public function getCategoryOptions()

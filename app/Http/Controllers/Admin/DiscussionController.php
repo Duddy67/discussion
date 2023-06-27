@@ -152,10 +152,11 @@ class DiscussionController extends Controller
             return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
         }
 
-        $discussion->title = $request->input('title');
-        $discussion->slug = Str::slug($request->input('title'), '-').'-'.$discussion->id;
+        $discussion->subject = $request->input('subject');
+        $discussion->slug = Str::slug($request->input('subject'), '-').'-'.$discussion->id;
         $discussion->description = $request->input('description');
         $discussion->discussion_date = $request->input('_discussion_date');
+        $discussion->platform = $request->input('platform');
         $discussion->discussion_link = $request->input('discussion_link');
         $discussion->registering_alert = $request->input('registering_alert');
         $discussion->is_private = $request->input('is_private');
@@ -218,13 +219,14 @@ class DiscussionController extends Controller
     public function store(StoreRequest $request)
     {
         $discussion = Discussion::create([
-            'title' => $request->input('title'), 
+            'subject' => $request->input('subject'), 
             'status' => $request->input('status'), 
             'description' => $request->input('description'), 
             'access_level' => $request->input('access_level'), 
             'owned_by' => $request->input('owned_by'),
             //'meta_data' => $request->input('meta_data'),
             'settings' => $request->input('settings'),
+            'platform' => $request->input('platform'),
             'discussion_link' => $request->input('discussion_link'),
             'discussion_date' => $request->input('_discussion_date'),
             'registering_alert' => $request->input('registering_alert'),
@@ -232,7 +234,7 @@ class DiscussionController extends Controller
             'max_attendees' => $request->input('max_attendees'),
         ]);
 
-        $discussion->slug = Str::slug($discussion->title, '-').'-'.$discussion->id;
+        $discussion->slug = Str::slug($discussion->subject, '-').'-'.$discussion->id;
         //$discussion->updated_by = auth()->user()->id;
 
         $discussion->save();
