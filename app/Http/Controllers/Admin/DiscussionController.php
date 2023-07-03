@@ -56,7 +56,7 @@ class DiscussionController extends Controller
         $actions = $this->getActions('list');
         $filters = $this->getFilters($request);
         $items = $this->model->getItems($request);
-        $rows = $this->getRows($columns, $items, ['category', 'attendees']);
+        $rows = $this->getRows($columns, $items, ['category_id', 'attendees']);
         $this->setRowValues($rows, $columns, $items);
         $query = $request->query();
         $url = ['route' => 'admin.discussions', 'item_name' => 'discussion', 'query' => $query];
@@ -195,7 +195,7 @@ class DiscussionController extends Controller
 
         $discussion->save();
         //$discussion->category()->save($request->input('category'));
-        $category = Category::find($request->input('category'));
+        $category = Category::find($request->input('category_id'));
         $category->discussions()->save($discussion);
 
         $refresh = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
@@ -239,7 +239,7 @@ class DiscussionController extends Controller
 
         $discussion->save();
 
-        $category = Category::find($request->input('category'));
+        $category = Category::find($request->input('category_id'));
         $category->discussions()->save($discussion);
 
         if ($request->input('groups') !== null) {

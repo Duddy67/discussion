@@ -104,7 +104,7 @@ class Item extends Model
         return $url;
     }
 
-    public function getParentIdOptions()
+    public function getParentItemOptions()
     {
         // Get the parent menu code.
         $code = Request::route()->parameter('code');

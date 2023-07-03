@@ -16,9 +16,10 @@
   {
     "label": "labels.generic.category",
     "type": "select",
-    "name": "category",
+    "name": "category_id",
+    "function": "categories",
     "extra": ["title_as_id"],
-    "id": "category",
+    "id": "category_id",
     "blank": "labels.generic.select_option",
     "options": []
   },

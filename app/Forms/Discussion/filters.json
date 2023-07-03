@@ -15,11 +15,11 @@
     "options": [] 
   },
   {
-    "label": "labels.generic.category",
+    "label": "labels.title.categories",
     "type": "select",
-    "name": "category",
-    "id": "filters-category",
-    "blank": "labels.generic.select_option",
+    "name": "categories",
+    "extra": ["multiple"],
+    "id": "filters-categories",
     "options": [] 
   },
   {

@@ -221,7 +221,7 @@ class Category extends Model
         return $query;
     }
 
-    public function getParentIdOptions()
+    /*public function getParentIdOptions()
     {
         $nodes = Category::get()->toTree();
         $options = [];
@@ -256,7 +256,7 @@ class Category extends Model
         $traverse($nodes);
 
         return $options;
-    }
+    }*/
 
     public function getOwnedByOptions()
     {

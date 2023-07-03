@@ -81,8 +81,8 @@ class Discussion extends Model
         $search = $request->input('search', null);
         $sortedBy = $request->input('sorted_by', null);
         $ownedBy = $request->input('owned_by', null);
-        $category = $request->input('category', null);
         $groups = $request->input('groups', []);
+        $categories = $request->input('categories', []);
 
         $query = Discussion::query();
         $query->select('discussions.*', 'users.name as owner_name')->leftJoin('users', 'discussions.owned_by', '=', 'users.id');
@@ -102,8 +102,9 @@ class Discussion extends Model
             $query->whereIn('discussions.owned_by', $ownedBy);
         }
 
-        if ($category !== null) {
-            $query->whereIn('discussions.category_id', [$category]);
+        // Filter by categories
+        if (!empty($categories)) {
+            $query->whereIn('discussions.category_id', $categories);
         }
 
         if (!empty($groups)) {
@@ -155,7 +156,7 @@ class Discussion extends Model
         return '/'.$segments['discussion'].'/'.$this->id.'/'.$this->slug;
     }
 
-    public function getCategoryOptions()
+    /*public function getCategoryOptions()
     {
         $nodes = Category::where('status', 'published')->defaultOrder()->get()->toTree();
         $options = [];
@@ -176,7 +177,7 @@ class Discussion extends Model
         $traverse($nodes);
 
         return $options;
-    }
+    }*/
 
     /*
      * Generic function that returns model values which are handled by select inputs. 
