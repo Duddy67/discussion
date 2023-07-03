@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Discussion\Category;
 use App\Models\Discussion\Subscription;
+use App\Models\Setting;
 use App\Models\User\Group;
 use App\Traits\AccessLevel;
 use App\Traits\CheckInCheckOut;
@@ -148,9 +149,15 @@ class Discussion extends Model
         ];
     }
 
+    public function getUrl()
+    {
+        $segments = Setting::getSegments('Discussion');
+        return '/'.$segments['discussion'].'/'.$this->id.'/'.$this->slug;
+    }
+
     public function getCategoryOptions()
     {
-        $nodes = Category::get()->toTree();
+        $nodes = Category::where('status', 'published')->defaultOrder()->get()->toTree();
         $options = [];
         $userGroupIds = auth()->user()->getGroupIds();
 

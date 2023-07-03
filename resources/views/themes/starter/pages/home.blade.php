@@ -1,12 +1,12 @@
 
 @if (isset($category) && $category)
     <ul class="post-list">
-	@if (count($posts))
-	    @foreach ($posts as $post)
-		@include ('themes.starter.partials.post')
+	@if (count($discussions))
+	    @foreach ($discussions as $discussion)
+		@include ('themes.starter.partials.discussion')
 	    @endforeach
 	@else
-	    <div>No post</div>
+	    <div>No discussion</div>
 	@endif
     </ul>
 @endif

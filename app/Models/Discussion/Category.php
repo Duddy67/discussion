@@ -13,6 +13,7 @@ use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Traits\Node;
 use App\Traits\TreeAccessLevel;
 use App\Traits\CheckInCheckOut;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class Category extends Model
@@ -164,7 +165,7 @@ class Category extends Model
         $query->join('model_has_roles', 'discussions.owned_by', '=', 'model_id')->join('roles', 'roles.id', '=', 'role_id');
 
         // Get only the discussions related to this category. 
-        $query->whereHas('categories', function ($query) {
+        $query->whereHas('category', function ($query) {
             $query->where('id', $this->id);
         });
 
