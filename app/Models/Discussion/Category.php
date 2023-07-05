@@ -138,6 +138,11 @@ class Category extends Model
         return $query->get();
     }
 
+    public function getAll()
+    {
+        return Discussion::all();
+    }
+
     /*
      * Returns filtered and paginated discussions.
      */

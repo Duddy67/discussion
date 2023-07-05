@@ -1,0 +1,118 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Discussion;
+use App\Models\Discussion\Comment;
+use App\Models\Discussion\Setting as DiscussionSetting;
+use App\Models\Menu;
+use App\Models\Setting;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Discussion\Comment\StoreRequest;
+use App\Http\Requests\Discussion\Comment\UpdateRequest;
+
+
+class DiscussionController extends Controller
+{
+    public function show(Request $request, $id, $slug)
+    {
+        $discussion = Discussion::select('discussions.*', 'users.name as owner_name', 'users2.name as modifier_name')
+			->leftJoin('users', 'discussions.owned_by', '=', 'users.id')
+			->leftJoin('users as users2', 'discussions.updated_by', '=', 'users2.id')
+			->where('discussions.id', $id)->first();
+
+        $menu = Menu::getMenu('main-menu');
+        $menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
+        $theme = Setting::getValue('website', 'theme', 'starter');
+
+        if (!$discussion) {
+            $page = '404';
+            return view('themes.'.$theme.'.index', compact('page', 'menu'));
+	}
+
+	if (!$discussion->canAccess()) {
+            $page = '403';
+            return view('themes.'.$theme.'.index', compact('page', 'menu'));
+	}
+
+        $page = 'discussion';
+
+        $discussion->global_settings = DiscussionSetting::getDataByGroup('discussions');
+	$settings = $discussion->getSettings();
+        $timezone = Setting::getValue('app', 'timezone');
+        $metaData = $discussion->meta_data;
+        $segments = Setting::getSegments('Discussion');
+	$query = array_merge($request->query(), ['id' => $id, 'slug' => $slug]);
+
+        return view('themes.'.$theme.'.index', compact('page', 'menu', 'id', 'slug', 'discussion', 'segments', 'settings', 'timezone', 'metaData', 'query'));
+    }
+
+    public function saveComment(StoreRequest $request, $id, $slug)
+    {
+        $comment = Comment::create([
+            'text' => $request->input('comment-0'), 
+            'owned_by' => Auth::id()
+        ]);
+
+        $discussion = Discussion::find($id);
+        $discussion->comments()->save($comment);
+
+        $comment->author = auth()->user()->name;
+        $theme = Setting::getValue('website', 'theme', 'starter');
+        $timezone = Setting::getValue('app', 'timezone');
+
+        return response()->json([
+            'id' => $comment->id, 
+            'action' => 'create', 
+            'render' => view('themes.'.$theme.'.partials.discussion.comment', compact('comment', 'timezone'))->render(),
+            'text' => $comment->text,
+            'message' => __('messages.discussion.create_comment_success'),
+        ]);
+    }
+
+    public function updateComment(UpdateRequest $request, Comment $comment)
+    {
+        // Make sure the user match the comment owner.
+        if (auth()->user()->id != $comment->owned_by) {
+            return response()->json([
+                'errors' => [],
+                'commentId' => $comment->id,
+                'status' => true,
+                'message' => __('messages.discussion.edit_comment_not_auth')
+            ], 422);
+        }
+
+        $comment->text = $request->input('comment-'.$comment->id); 
+        $comment->save();
+
+        return response()->json([
+            'id' => $comment->id, 
+            'action' => 'update', 
+            'message' => __('messages.discussion.update_comment_success')
+        ]);
+    }
+
+    public function deleteComment(Request $request, Comment $comment)
+    {
+        // Make sure the user match the comment owner.
+        if (auth()->user()->id != $comment->owned_by) {
+            return response()->json([
+                'errors' => [],
+                'commentId' => $comment->id,
+                'status' => true,
+                'message' => __('messages.discussion.delete_comment_not_auth')
+            ], 422);
+        }
+
+        $id = $comment->id;
+        $comment->delete();
+
+        return response()->json([
+            'id' => $id, 
+            'action' => 'delete', 
+            'message' => __('messages.discussion.delete_comment_success')
+        ]);
+    }
+}

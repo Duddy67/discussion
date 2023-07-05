@@ -24,7 +24,8 @@ class SiteController extends Controller
         $timezone = Setting::getValue('app', 'timezone');
 
         if ($category = Category::where('slug', $page)->first()) {
-            $discussions = $category->getAllDiscussions($request);
+
+            $discussions = ($page == 'home') ? $category->getAll() : $category->getAllDiscussions($request);
 
             $globalSettings = DiscussionSetting::getDataByGroup('categories');
 
