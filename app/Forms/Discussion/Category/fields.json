@@ -137,19 +137,19 @@
     "options": [] 
   },
   {
-    "label": "labels.generic.show_subcategories",
+    "label": "labels.generic.show_image",
     "type": "select",
-    "name": "show_subcategories",
-    "id": "show_subcategories",
+    "name": "show_image",
+    "id": "show_image",
     "extra": ["yes_no", "global_setting"],
     "group": "settings",
     "options": [] 
   },
   {
-    "label": "labels.generic.show_image",
+    "label": "labels.generic.show_subcategories",
     "type": "select",
-    "name": "show_image",
-    "id": "show_image",
+    "name": "show_subcategories",
+    "id": "show_subcategories",
     "extra": ["yes_no", "global_setting"],
     "group": "settings",
     "options": [] 

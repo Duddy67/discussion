@@ -7,7 +7,7 @@
 @endif
 
 @if ($settings['show_image'] && $category->image)
-    <img class="post-image" src="{{ url('/').$category->image->getThumbnailUrl() }}" >
+    <img class="discussion-image" src="{{ url('/').$category->image->getThumbnailUrl() }}" >
 @endif
 
 @if ($settings['show_search'])
@@ -18,22 +18,22 @@
     </div>
 @endif
 
-<ul class="post-list pt-4">
-    @if (count($posts))
-	@foreach ($posts as $post)
-	    @include ('themes.starter.partials.post')
+<ul class="discussion-list pt-4">
+    @if (count($discussions))
+	@foreach ($discussions as $discussion)
+	    @include ('themes.starter.partials.discussion')
 	@endforeach
     @else
-	<div>No post</div>
+	<div>No discussion</div>
     @endif
 </ul>
 
-<x-pagination :items=$posts />
+<x-pagination :items=$discussions />
 
 @if ($settings['show_subcategories'])
-    @include ('themes.starter.partials.post.subcategories')
+    @include ('themes.starter.partials.discussion.subcategories')
 @endif
 
 @push ('scripts')
-    <script type="text/javascript" src="{{ $public }}/js/post/category.js"></script>
+    <script type="text/javascript" src="{{ $public }}/js/discussion/category.js"></script>
 @endpush

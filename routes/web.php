@@ -11,6 +11,7 @@ use App\Http\Controllers\Cms\FileManagerController;
 use App\Http\Controllers\Cms\FileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Post\CategoryController as PostCategoryController;
+use App\Http\Controllers\DiscussionController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\SearchController;
@@ -35,6 +36,9 @@ Route::post('/'.$segments['post'].'/{id}/{slug}/comment', [PostController::class
 Route::put('/'.$segments['post'].'/comment/{comment}', [PostController::class, 'updateComment'])->name('post.comment.update')->middleware('auth');
 Route::delete('/'.$segments['post'].'/comment/{comment}', [PostController::class, 'deleteComment'])->name('post.comment.delete')->middleware('auth');
 Route::get('/'.$segments['plugin'].'/'.$segments['category'].'/{id}/{slug}', [PostCategoryController::class, 'index'])->name('post.category');
+
+$segments = Setting::getSegments('Discussion');
+Route::get('/'.$segments['discussion'].'/{id}/{slug}', [DiscussionController::class, 'show'])->name('discussion');
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
