@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Discussion\Category;
 use App\Models\Discussion\Subscription;
+use App\Models\Discussion\WaitingList;
 use App\Models\Setting;
 use App\Models\User\Group;
 use App\Traits\AccessLevel;
@@ -27,6 +28,7 @@ class Discussion extends Model
         'owned_by',
         'access_level',
         'description',
+        'media_link',
         'discussion_date',
         'discussion_link',
         'max_attendees',
@@ -61,7 +63,15 @@ class Discussion extends Model
      */
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class);
+        return $this->hasMany(Subscription::class)->where('on_waiting_list', false);
+    }
+
+    /**
+     * The subscriptions that belong to the discussion.
+     */
+    public function subscriptionsOnWaitingList()
+    {
+        return $this->hasMany(Subscription::class)->where('on_waiting_list', true);
     }
 
     /**
@@ -156,28 +166,13 @@ class Discussion extends Model
         return '/'.$segments['discussion'].'/'.$this->id.'/'.$this->slug;
     }
 
-    /*public function getCategoryOptions()
+    public function getMediaThumbnail()
     {
-        $nodes = Category::where('status', 'published')->defaultOrder()->get()->toTree();
-        $options = [];
-        $userGroupIds = auth()->user()->getGroupIds();
+    }
 
-        $traverse = function ($categories, $prefix = '-') use (&$traverse, &$options, $userGroupIds) {
-            foreach ($categories as $category) {
-                // Check wether the current user groups match the category groups (if any).
-                $belongsToGroups = (!empty(array_intersect($userGroupIds, $category->getGroupIds()))) ? true : false;
-                // Set the category option accordingly.
-                $extra = ($category->access_level == 'private' && $category->owned_by != auth()->user()->id && !$belongsToGroups) ? ['disabled'] : [];
-                $options[] = ['value' => $category->id, 'text' => $prefix.' '.$category->name, 'extra' => $extra];
-
-                $traverse($category->children, $prefix.'-');
-            }
-        };
-
-        $traverse($nodes);
-
-        return $options;
-    }*/
+    public function getTimeBeforeDiscussion()
+    {
+    }
 
     /*
      * Generic function that returns model values which are handled by select inputs. 

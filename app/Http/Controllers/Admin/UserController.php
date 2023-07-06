@@ -146,6 +146,7 @@ class UserController extends Controller
         }
 
         $user->name = $request->input('name');
+        $user->nickname = $request->input('nickname');
         $user->email = $request->input('email');
         $user->updated_by = auth()->user()->id;
 
@@ -204,6 +205,7 @@ class UserController extends Controller
     {
         $user = User::create([
             'name' => $request->input('name'),
+            'nickname' => $request->input('nickname'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);

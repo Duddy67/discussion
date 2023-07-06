@@ -12,6 +12,12 @@
     "type": "string"
   },
   {
+    "label": "labels.generic.nickname",
+    "name": "nickname",
+    "extra": ["sortable", "linkable"],
+    "type": "string"
+  },
+  {
     "label": "labels.user.email",
     "name": "email",
     "type": "string"

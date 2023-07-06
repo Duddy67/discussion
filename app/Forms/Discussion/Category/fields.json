@@ -155,6 +155,15 @@
     "options": [] 
   },
   {
+    "label": "labels.discussion.show_discussion_media_thumbnail",
+    "type": "select",
+    "name": "show_discussion_media_thumbnail",
+    "id": "show_discussion_media_thumbnail",
+    "extra": ["yes_no", "global_setting"],
+    "group": "settings",
+    "options": [] 
+  },
+  {
     "label": "labels.discussion.show_discussion_category",
     "type": "select",
     "name": "show_discussion_category",

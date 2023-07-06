@@ -101,10 +101,10 @@
     "options": [] 
   },
   {
-    "label": "labels.discussion.show_video_thumbnail",
+    "label": "labels.discussion.show_discussion_media_thumbnail",
     "type": "select",
-    "name": "show_video_thumbnail",
-    "id": "show_video_thumbnail",
+    "name": "show_discussion_media_thumbnail",
+    "id": "show_discussion_media_thumbnail",
     "extra": ["yes_no"],
     "group": "categories",
     "options": [] 

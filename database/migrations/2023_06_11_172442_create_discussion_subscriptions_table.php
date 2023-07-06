@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('discussion_id');
             $table->unsignedBigInteger('user_id');
-            $table->boolean('waiting_list')->nullable();
+            $table->boolean('on_waiting_list')->nullable();
             $table->timestamps();
         });
     }

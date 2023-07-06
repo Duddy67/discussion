@@ -155,6 +155,7 @@ class DiscussionController extends Controller
         $discussion->subject = $request->input('subject');
         $discussion->slug = Str::slug($request->input('subject'), '-').'-'.$discussion->id;
         $discussion->description = $request->input('description');
+        $discussion->media_link = $request->input('media_link');
         $discussion->discussion_date = $request->input('_discussion_date');
         $discussion->platform = $request->input('platform');
         $discussion->discussion_link = $request->input('discussion_link');
@@ -222,6 +223,7 @@ class DiscussionController extends Controller
             'subject' => $request->input('subject'), 
             'status' => $request->input('status'), 
             'description' => $request->input('description'), 
+            'media_link' => $request->input('media_link'), 
             'access_level' => $request->input('access_level'), 
             'owned_by' => $request->input('owned_by'),
             //'meta_data' => $request->input('meta_data'),

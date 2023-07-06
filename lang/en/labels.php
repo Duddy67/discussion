@@ -73,8 +73,10 @@ return [
 	'is_private' => 'Is private',
 	'registering_alert' => 'Registering alert',
 	'comment_alert' => 'Comment alert',
+	'media_link' => 'Media link',
 	'discussion_link' => 'Discussion link',
 	'show_discussion_category' => 'Show discussion category',
+	'show_discussion_media_thumbnail' => 'Show discussion media thumbnail',
 	'discussion_ordering' => 'Discussion ordering',
 	'zoom' => 'Zoom',
 	'skype' => 'Skype',
@@ -122,6 +124,7 @@ return [
     'generic' => [
 	'title' => 'Title',
 	'name' => 'Name',
+	'nickname' => 'Nickname',
 	'slug' => 'Slug',
 	'code' => 'Code',
 	'alias' => 'Alias',

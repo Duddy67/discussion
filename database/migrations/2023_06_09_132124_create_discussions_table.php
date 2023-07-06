@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('subject', 100);
             $table->string('slug', 100);
             $table->text('description')->nullable();
+            $table->string('media_link', 100);
             $table->char('access_level', 10);
             $table->char('status', 12);
             $table->unsignedBigInteger('category_id');

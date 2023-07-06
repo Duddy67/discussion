@@ -14,6 +14,13 @@
     "id": "description"
   },
   {
+    "label": "labels.discussion.media_link",
+    "type": "text",
+    "name": "media_link",
+    "id": "media_link",
+    "placeholder": "labels.discussion.media_link"
+  },
+  {
     "label": "labels.generic.category",
     "type": "select",
     "name": "category_id",

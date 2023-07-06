@@ -18,7 +18,7 @@ class DiscussionController extends Controller
 {
     public function show(Request $request, $id, $slug)
     {
-        $discussion = Discussion::select('discussions.*', 'users.name as owner_name', 'users2.name as modifier_name')
+        $discussion = Discussion::select('discussions.*', 'users.nickname as nickname', 'users.name as owner_name', 'users2.name as modifier_name')
 			->leftJoin('users', 'discussions.owned_by', '=', 'users.id')
 			->leftJoin('users as users2', 'discussions.updated_by', '=', 'users2.id')
 			->where('discussions.id', $id)->first();
@@ -39,14 +39,14 @@ class DiscussionController extends Controller
 
         $page = 'discussion';
 
-        $discussion->global_settings = DiscussionSetting::getDataByGroup('discussions');
-	$settings = $discussion->getSettings();
+        //$discussion->global_settings = DiscussionSetting::getDataByGroup('discussions');
+	//$settings = $discussion->getSettings();
         $timezone = Setting::getValue('app', 'timezone');
-        $metaData = $discussion->meta_data;
+        //$metaData = $discussion->meta_data;
         $segments = Setting::getSegments('Discussion');
 	$query = array_merge($request->query(), ['id' => $id, 'slug' => $slug]);
 
-        return view('themes.'.$theme.'.index', compact('page', 'menu', 'id', 'slug', 'discussion', 'segments', 'settings', 'timezone', 'metaData', 'query'));
+        return view('themes.'.$theme.'.index', compact('page', 'menu', 'id', 'slug', 'discussion', 'segments', 'timezone', 'query'));
     }
 
     public function saveComment(StoreRequest $request, $id, $slug)

@@ -26,6 +26,7 @@ class StoreRequest extends FormRequest
     {
         return [
 	    'name' => 'bail|required|between:5,25|regex:/^[\pL\s\-]+$/u',
+	    'nickname' => 'bail|required|between:5,20|unique:users',
 	    'email' => 'bail|required|email|unique:users',
 	    'password' => 'required|confirmed|min:8',
 	    'role' => 'required',

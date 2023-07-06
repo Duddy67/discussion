@@ -8,6 +8,14 @@
     "placeholder": "labels.generic.name"
   },
   {
+    "label": "labels.generic.nickname",
+    "type": "text",
+    "name": "nickname",
+    "id": "nickname",
+    "readonly": false,
+    "placeholder": "labels.generic.nickname"
+  },
+  {
     "label": "labels.user.email",
     "type": "text",
     "name": "email",

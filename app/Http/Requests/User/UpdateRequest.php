@@ -27,6 +27,7 @@ class UpdateRequest extends FormRequest
     {
         $rules = [
 	    'name' => 'bail|required|between:5,25|regex:/^[\pL\s\-]+$/u',
+	    'nickname' => ['bail', 'required', 'between:5,20', Rule::unique('users')->ignore($this->user->id)],
 	    'email' => ['bail', 'required', 'email',
 			Rule::unique('users')->ignore($this->user->id)
 	    ],
