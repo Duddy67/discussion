@@ -12,6 +12,7 @@ use App\Models\Setting;
 use App\Models\User\Group;
 use App\Traits\AccessLevel;
 use App\Traits\CheckInCheckOut;
+use Carbon\Carbon;
 
 class Discussion extends Model
 {
@@ -168,10 +169,52 @@ class Discussion extends Model
 
     public function getMediaThumbnail()
     {
+        if (str_starts_with($this->media_link, 'https://youtu.be/')) {
+            preg_match('#^https\:\/\/youtu\.be\/([a-zA-Z0-9_-]+)$#', $this->media_link, $matches);
+            $code = $matches[1];
+
+            return 'https://img.youtube.com/vi/'.$code.'/mqdefault.jpg'; 
+        }
     }
 
-    public function getTimeBeforeDiscussion()
+    public function getTimeBeforeDiscussion(): ?\stdClass
     {
+        if (!$dates = $this->getDateTimes()) {
+            return null;
+        }
+
+        $time = new \stdClass();
+
+        $time->days = $dates['now']->diffInDays($dates['discussion']);
+        $time->hours = $dates['now']->copy()->addDays($time->days)->diffInHours($dates['discussion']);
+        $time->minutes = $dates['now']->copy()->addDays($time->days)->addHours($time->hours)->diffInMinutes($dates['discussion']);
+
+        return $time;
+    }
+
+    public function getTimeBeforeDiscussionInMinutes(): ?int
+    {
+        if (!$dates = $this->getDateTimes()) {
+            return null;
+        }
+
+        return $dates['now']->diffInMinutes($dates['discussion']);
+    }
+
+    /*
+     * Returns the datetimes for now and the discussion.
+     */
+    private function getDateTimes(): ?array
+    {
+        $now = Carbon::parse(Carbon::now());
+        $discussion = Carbon::parse($this->discussion_date);
+
+        // Check the discussion date is still valid.
+        if ($now->gt($discussion) || $now->eq($discussion)) {
+            return null;
+        }
+
+        return ['now' => $now, 'discussion' => $discussion];
     }
 
     /*

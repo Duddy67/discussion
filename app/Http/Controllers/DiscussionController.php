@@ -41,6 +41,7 @@ class DiscussionController extends Controller
 
         //$discussion->global_settings = DiscussionSetting::getDataByGroup('discussions');
 	//$settings = $discussion->getSettings();
+        //$discussion->time_before_discussion = $discussion->getTimeBeforeDiscussion();
         $timezone = Setting::getValue('app', 'timezone');
         //$metaData = $discussion->meta_data;
         $segments = Setting::getSegments('Discussion');
