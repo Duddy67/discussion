@@ -13,6 +13,9 @@
 
     <div>Attendees: {{ $discussion->subscriptions->count() }}/{{ $discussion->max_attendees }}</div>
 
+    @if (auth()->check())
+    @endif
+
     @if ($discussion->subscriptionsOnWaitingList->count())
         <div>Waiting list: {{ $discussion->subscriptionsOnWaitingList->count() }}</div>
     @endif

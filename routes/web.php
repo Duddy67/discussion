@@ -39,6 +39,8 @@ Route::get('/'.$segments['plugin'].'/'.$segments['category'].'/{id}/{slug}', [Po
 
 $segments = Setting::getSegments('Discussion');
 Route::get('/'.$segments['discussion'].'/{id}/{slug}', [DiscussionController::class, 'show'])->name('discussion');
+Route::get('/'.$segments['discussion'].'/create', [DiscussionController::class, 'create'])->name('discussion.create');
+Route::get('/'.$segments['discussion'].'/{discussion}/edit', [DiscussionController::class, 'edit'])->name('discussion.edit');
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

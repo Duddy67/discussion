@@ -50,6 +50,26 @@ class DiscussionController extends Controller
         return view('themes.'.$theme.'.index', compact('page', 'menu', 'id', 'slug', 'discussion', 'segments', 'timezone', 'query'));
     }
 
+    public function create(Request $request)
+    {
+        $menu = Menu::getMenu('main-menu');
+        $menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
+        $theme = Setting::getValue('website', 'theme', 'starter');
+        $timezone = Setting::getValue('app', 'timezone');
+        $page = 'discussion.create';
+
+        return view('themes.'.$theme.'.index', compact('page', 'menu', 'timezone'));
+    }
+
+    public function edit(Request $request)
+    {
+        echo 'EDIT';
+    }
+
+    public function unregister()
+    {
+    }
+
     public function saveComment(StoreRequest $request, $id, $slug)
     {
         $comment = Comment::create([
