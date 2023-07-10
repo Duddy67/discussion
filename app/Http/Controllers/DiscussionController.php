@@ -9,6 +9,7 @@ use App\Models\Discussion\Comment;
 use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Models\Menu;
 use App\Models\Setting;
+use App\Traits\Form;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Discussion\Comment\StoreRequest;
 use App\Http\Requests\Discussion\Comment\UpdateRequest;
@@ -16,6 +17,30 @@ use App\Http\Requests\Discussion\Comment\UpdateRequest;
 
 class DiscussionController extends Controller
 {
+    use Form;
+
+    /*
+     * Instance of the model.
+     */
+    protected $model;
+
+    /*
+     * The item to edit in the form.
+     */
+    protected $item = null;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('discussions');
+        $this->model = new Discussion;
+    }
+
     public function show(Request $request, $id, $slug)
     {
         $discussion = Discussion::select('discussions.*', 'users.nickname as nickname', 'users.name as owner_name', 'users2.name as modifier_name')
@@ -56,9 +81,15 @@ class DiscussionController extends Controller
         $menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
         $theme = Setting::getValue('website', 'theme', 'starter');
         $timezone = Setting::getValue('app', 'timezone');
-        $page = 'discussion.create';
+        $fields = $this->getFields(['updated_by', 'created_at', 'updated_at', 'owner_name', 'access_level']);
+        $page = 'discussion.form';
+	$query = $request->query();
 
-        return view('themes.'.$theme.'.index', compact('page', 'menu', 'timezone'));
+        return view('themes.'.$theme.'.index', compact('page', 'menu', 'fields', 'timezone', 'query'));
+    }
+
+    public function cancel(Request $request)
+    {
     }
 
     public function edit(Request $request)

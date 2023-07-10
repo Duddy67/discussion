@@ -15,7 +15,7 @@
         <div class="hidden fixed me-2 px-6 py-4 sm:block">
             @auth
                 <a href="{{ url('/profile') }}" class="text-sm text-gray-700 underline">Profile</a>
-                <a href="{{ route('discussion.create') }}" class="text-sm text-gray-700 underline">New Discussion</a>
+                <a href="{{ route('discussions.create') }}" class="text-sm text-gray-700 underline">New Discussion</a>
             @else
                 <a href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
 

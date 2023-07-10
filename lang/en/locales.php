@@ -16,13 +16,13 @@ return [
         ],
         'Discussion' => [
             'en' => [
-                'discussion' => 'discussion',
-                'category' => 'category',
+                'discussions' => 'discussions',
+                'categories' => 'categories',
                 'plugin' => 'meeting',
             ],
             'fr' => [
-                'discussion' => 'discussion',
-                'category' => 'categorie',
+                'discussions' => 'discussions',
+                'categories' => 'categories',
                 'plugin' => 'meeting',
             ],
         ],

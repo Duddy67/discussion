@@ -21,8 +21,13 @@
 	<link rel="stylesheet" href="{{ asset('/css/style.css') }}">
         <!-- Google fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work Sans:100,200,300,400,500|Whisper|Alex Brush">
+        <link rel="stylesheet" href="{{ asset('/vendor/adminlte/plugins/select2/css/select2.min.css') }}">
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+
+        @if (request()->is('discussions/create'))
+            <link rel="stylesheet" href="{{ asset('/vendor/adminlte/plugins/daterangepicker/daterangepicker.css') }}">
+        @endif
     </head>
     <body>
 
