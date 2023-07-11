@@ -201,8 +201,14 @@ class Discussion extends Model
         return $dates['now']->diffInMinutes($dates['discussion']);
     }
 
-    public function isRegistered(): bool
+    public function isUserRegistered(): bool
     {
+        return $this->registrations()->where(['user_id' => auth()->user()->id, 'on_waiting_list' => false])->exists();
+    }
+
+    public function isUserOnWaitingList(): bool
+    {
+        return $this->registrations()->where(['user_id' => auth()->user()->id, 'on_waiting_list' => true])->exists();
     }
 
     /*

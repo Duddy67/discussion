@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    if (document.getElementById('register') !== null) {
-        document.getElementById('register').onclick = function(e) { 
-            alert('REGISTER');
+    let registerBtn = document.getElementById('register');
+    if (registerBtn !== null) {
+        registerBtn.onclick = function(e) { 
+            alert('REGISTER '+registerBtn.dataset.url);
+            window.location = registerBtn.dataset.url;
         }
     }
 

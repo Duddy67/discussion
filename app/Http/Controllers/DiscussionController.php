@@ -97,6 +97,11 @@ class DiscussionController extends Controller
         echo 'EDIT';
     }
 
+    public function register(Discussion $discussion)
+    {
+        echo 'REGISTER '.$discussion->subject;
+    }
+
     public function unregister()
     {
     }
