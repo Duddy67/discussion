@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Discussion;
 use App\Models\User;
 
-class Subscription extends Model
+class Registration extends Model
 {
     use HasFactory;
 
@@ -17,7 +17,7 @@ class Subscription extends Model
      *
      * @var string
      */
-    protected $table = 'discussion_subscriptions';
+    protected $table = 'discussion_registrations';
 
 
     /**

@@ -11,14 +11,17 @@
     </div>
     <div><img src="{{ $discussion->getMediaThumbnail() }}"></div>
 
-    <div>Attendees: {{ $discussion->subscriptions->count() }}/{{ $discussion->max_attendees }}</div>
+    <div>Attendees: {{ $discussion->registrations->count() }}/{{ $discussion->max_attendees }}</div>
 
-    @if (auth()->check())
-    @endif
+    @include('themes.starter.partials.discussion.registration')
 
-    @if ($discussion->subscriptionsOnWaitingList->count())
-        <div>Waiting list: {{ $discussion->subscriptionsOnWaitingList->count() }}</div>
+    @if ($discussion->registrationsOnWaitingList->count())
+        <div>Waiting list: {{ $discussion->registrationsOnWaitingList->count() }}</div>
     @endif
 
     <div>Platform: {{ __('labels.discussion.'.$discussion->platform) }}</div>
 
+@push ('scripts')
+    <script src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>
+    <script src="{{ asset('/js/discussion.js') }}"></script>
+@endpush

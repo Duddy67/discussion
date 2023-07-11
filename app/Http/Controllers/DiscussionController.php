@@ -36,8 +36,8 @@ class DiscussionController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('discussions');
+        $this->middleware('auth')->except(['show']);
+        $this->middleware('discussions')->except(['show']);
         $this->model = new Discussion;
     }
 

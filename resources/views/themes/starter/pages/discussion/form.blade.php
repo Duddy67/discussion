@@ -1,8 +1,4 @@
 <div class="position-relative">
-@push ('style')
-    <link rel="stylesheet" href="{{ asset('/vendor/adminlte/plugins/daterangepicker/daterangepicker.css') }}">
-@endpush
-
     @include('themes.starter.layouts.flash-message')
 
     @php $action = (isset($discussion)) ? route('discussions.update', $query) : route('discussions.store', $query) @endphp
@@ -33,9 +29,11 @@
 @push ('scripts')
     <script type="text/javascript" src="{{ asset('/vendor/adminlte/plugins/moment/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/vendor/adminlte/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/vendor/adminlte/plugins/select2/js/select2.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/vendor/tinymce/tinymce.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/admin/daterangepicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/admin/form.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('/js/admin/set.private.groups.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/admin/set.private.groups.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/tinymce/filemanager.js') }}"></script>
 @endpush

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Discussion\Category;
-use App\Models\Discussion\Subscription;
+use App\Models\Discussion\Registration;
 use App\Models\Discussion\WaitingList;
 use App\Models\Setting;
 use App\Models\User\Group;
@@ -60,19 +60,19 @@ class Discussion extends Model
     }
 
     /**
-     * The subscriptions that belong to the discussion.
+     * The registrations that belong to the discussion.
      */
-    public function subscriptions()
+    public function registrations()
     {
-        return $this->hasMany(Subscription::class)->where('on_waiting_list', false);
+        return $this->hasMany(Registration::class)->where('on_waiting_list', false);
     }
 
     /**
-     * The subscriptions that belong to the discussion.
+     * The registrations that belong to the discussion.
      */
-    public function subscriptionsOnWaitingList()
+    public function registrationsOnWaitingList()
     {
-        return $this->hasMany(Subscription::class)->where('on_waiting_list', true);
+        return $this->hasMany(Registration::class)->where('on_waiting_list', true);
     }
 
     /**
@@ -164,7 +164,7 @@ class Discussion extends Model
     public function getUrl()
     {
         $segments = Setting::getSegments('Discussion');
-        return '/'.$segments['discussion'].'/'.$this->id.'/'.$this->slug;
+        return '/'.$segments['discussions'].'/'.$this->id.'/'.$this->slug;
     }
 
     public function getMediaThumbnail()
@@ -199,6 +199,10 @@ class Discussion extends Model
         }
 
         return $dates['now']->diffInMinutes($dates['discussion']);
+    }
+
+    public function isRegistered(): bool
+    {
     }
 
     /*
