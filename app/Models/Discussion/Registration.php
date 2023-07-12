@@ -19,6 +19,15 @@ class Registration extends Model
      */
     protected $table = 'discussion_registrations';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'on_waiting_list',
+    ];
 
     /**
      * Get the discussion that owns the subscription.

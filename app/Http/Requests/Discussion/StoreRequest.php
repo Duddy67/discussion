@@ -23,18 +23,23 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'subject' => 'required',
             'description' => 'required',
-            'category' => 'required',
+            'category_id' => 'required',
             'discussion_date' => 'required',
             'platform' => 'required',
             'discussion_link' => 'required',
             'max_attendees' => 'required',
-            'access_level' => 'required',
             //'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg,gif,svg', 'max:2048', 'dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'],
             'status' => 'required',
-            'owned_by' => 'required',
         ];
+
+        if (auth()->user()->canAccessAdmin()) {
+            $rules['access_level'] = 'required';
+            $rules['owned_by'] = 'required';
+        }
+
+        return $rules;
     }
 }

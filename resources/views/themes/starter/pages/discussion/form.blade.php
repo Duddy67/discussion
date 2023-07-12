@@ -1,8 +1,8 @@
 <div class="position-relative">
     @include('themes.starter.layouts.flash-message')
-
+@php var_dump(auth()->user()->canAccessAdmin()) @endphp
     @php $action = (isset($discussion)) ? route('discussions.update', $query) : route('discussions.store', $query) @endphp
-    <form method="post" action="{{ $action }}" id="itemForm">
+    <form method="post" action="{{ $action }}" id="form" role="form">
         @csrf
 
         @if (isset($discussion))
@@ -16,6 +16,22 @@
 
         <input type="hidden" id="cancelEdit" value="{{ route('discussions.cancel', $query) }}">
         <input type="hidden" id="close" name="_close" value="0">
+
+        <div class="text-center">
+            <button class="btn btn-success" id="submit" type="button">Save</button>
+        </div>
+
+        <div class="text-center">
+            <button class="btn btn-info" id="cancel" type="button">Cancel</button>
+        </div>
+
+        @if (isset($discussion))
+            <div class="text-center">
+                <button class="btn btn-danger" id="delete" type="button">
+                    Delete
+                </button>
+            </div>
+        @endif
     </form>
 
     @if (isset($discussion))
@@ -24,6 +40,10 @@
             @csrf
         </form>
     @endif
+
+    <div class="ajax-progress d-none" id="ajax-progress">
+        <img src="{{ asset('/images/progress-icon.gif') }}" class="progress-icon" style="top:20%;" />
+    </div>
 </div>
 
 @push ('scripts')
@@ -36,4 +56,5 @@
     <script type="text/javascript" src="{{ asset('/js/admin/form.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/admin/set.private.groups.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/tinymce/filemanager.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/discussion.js') }}"></script>
 @endpush
