@@ -21,6 +21,10 @@
 
     <div>Platform: {{ __('labels.discussion.'.$discussion->platform) }}</div>
 
+    @if ($discussion->canEdit() && $discussion->getTimeBeforeDiscussionInMinutes())
+        <a href="{{ route('discussions.edit', $discussion->id) }}" class="btn btn-success">Edit</a>
+    @endif
+
 @push ('scripts')
     <script src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>
     <script src="{{ asset('/js/discussion.js') }}"></script>

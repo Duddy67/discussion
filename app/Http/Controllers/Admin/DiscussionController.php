@@ -472,7 +472,7 @@ class DiscussionController extends Controller
                 }
 
                 if ($column->name == 'attendees') {
-                    $rows[$key]->attendees = $discussion->subscriptions->count().'/'.$discussion->max_attendees;
+                    $rows[$key]->attendees = $discussion->registrations->count().'/'.$discussion->max_attendees;
                 }
             }
         }
@@ -498,6 +498,4 @@ class DiscussionController extends Controller
             }
         }
     }*/
-
-
 }

@@ -40,9 +40,9 @@ Route::get('/'.$segments['plugin'].'/'.$segments['category'].'/{id}/{slug}', [Po
 $segments = Setting::getSegments('Discussion');
 Route::get('/'.$segments['discussions'].'/register/{discussion}', [DiscussionController::class, 'register'])->name('discussions.register');
 Route::get('/'.$segments['discussions'].'/unregister/{discussion}', [DiscussionController::class, 'unregister'])->name('discussions.unregister');
-Route::get('/'.$segments['discussions'].'/{id}/{slug}', [DiscussionController::class, 'show'])->name('discussions');
-Route::get('/'.$segments['discussions'].'/cancel/{id?}', [DiscussionController::class, 'cancel'])->name('discussions.cancel');
+Route::get('/'.$segments['discussions'].'/cancel/{discussion?}', [DiscussionController::class, 'cancel'])->name('discussions.cancel');
 Route::resource($segments['discussions'], DiscussionController::class)->except(['show', 'index']);
+Route::get('/'.$segments['discussions'].'/{id}/{slug}', [DiscussionController::class, 'show'])->name('discussions.show');
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

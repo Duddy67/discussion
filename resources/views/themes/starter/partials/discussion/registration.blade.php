@@ -1,4 +1,4 @@
-@if (auth()->check() && $discussion->getTimeBeforeDiscussion())
+@if (auth()->check() && auth()->user()->id != $discussion->owned_by && $discussion->getTimeBeforeDiscussion())
     @if (!$discussion->isUserRegistered())
         <div class="text-center"><button class="btn btn-success" id="register" data-url="{{ route('discussions.register', $discussion->id) }}" type="button">Register</button></div>
     @else

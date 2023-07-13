@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let registerBtn = document.getElementById('register');
     let unregisterBtn = document.getElementById('unregister');
+    let cancel = document.getElementById('cancel');
 
     if (registerBtn !== null) {
         registerBtn.onclick = function(e) { 
@@ -13,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
         unregisterBtn.onclick = function(e) { 
             alert('UNREGISTER '+unregisterBtn.dataset.url);
             window.location = unregisterBtn.dataset.url;
+        }
+    }
+    else if (cancel !== null) {
+        cancel.onclick = function(e) { 
+            alert('CANCEL '+cancel.dataset.url);
+            window.location = cancel.dataset.url;
         }
     }
 

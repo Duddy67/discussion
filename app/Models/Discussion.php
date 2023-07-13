@@ -232,18 +232,16 @@ class Discussion extends Model
      */
     public function getSelectedValue(\stdClass $field): mixed
     {
+        // Multiple
         if ($field->name == 'groups') {
             return $this->groups->pluck('id')->toArray();
-        }
-
-        if ($field->name == 'category') {
-            return $this->category_id;
         }
 
         if (isset($field->group) && $field->group == 'settings') {
             return (isset($this->settings[$field->name])) ? $this->settings[$field->name] : null;
         }
 
+        // Single
         return $this->{$field->name};
     }
 

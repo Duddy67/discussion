@@ -24,8 +24,8 @@
         <link rel="stylesheet" href="{{ asset('/vendor/adminlte/plugins/select2/css/select2.min.css') }}">
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
-
-        @if (request()->is('discussions/create'))
+        <!-- Daterangepicker -->
+        @if (request()->is('discussions/create') || request()->is('discussions/*/edit'))
             <link rel="stylesheet" href="{{ asset('/vendor/adminlte/plugins/daterangepicker/daterangepicker.css') }}">
         @endif
     </head>

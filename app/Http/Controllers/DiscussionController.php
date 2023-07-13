@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Discussion;
+use App\Models\Discussion\Category;
 use App\Models\Discussion\Comment;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Models\Menu;
 use App\Models\Setting;
+use App\Models\User;
+use App\Models\User\Group;
 use App\Traits\Form;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Discussion\StoreRequest;
@@ -93,8 +96,22 @@ class DiscussionController extends Controller
         return view('themes.'.$theme.'.index', compact('page', 'menu', 'fields', 'timezone', 'query'));
     }
 
-    public function cancel(Request $request)
+    /**
+     * Checks the record back in.
+     *
+     * @param  Request  $request
+     * @param  \App\Models\Discussion $discussion (optional)
+     * @return Response
+     */
+    public function cancel(Request $request, Discussion $discussion = null)
     {
+        if ($discussion && $discussion->checked_out == auth()->user()->id) {
+            $discussion->safeCheckIn();
+
+            return redirect()->route('discussions.show', array_merge($request->query(), ['id' => $discussion->id, 'slug' => $discussion->slug]));
+        }
+
+        return redirect()->route('site.index', $request->query());
     }
 
     public function edit(Request $request, int $id)
@@ -128,7 +145,7 @@ class DiscussionController extends Controller
         // Add the id parameter to the query.
         $query = array_merge($request->query(), ['discussion' => $id]);
 
-        return view('themes.'.$theme.'.index', compact('page', 'menu', 'fields', 'timezone', 'query'));
+        return view('themes.'.$theme.'.index', compact('page', 'menu', 'discussion', 'fields', 'timezone', 'query'));
     }
 
     /**
@@ -173,6 +190,86 @@ class DiscussionController extends Controller
 
         // Redirect to the edit form.
         return response()->json(['redirect' => route('discussions.edit', array_merge($request->query(), ['discussion' => $discussion->id]))]);
+    }
+
+    /**
+     * Update the specified discussion. (AJAX)
+     *
+     * @param  \App\Http\Requests\Discussion\UpdateRequest  $request
+     * @param  \App\Models\Discussion $discussion
+     * @return JSON
+     */
+    public function update(UpdateRequest $request, Discussion $discussion)
+    {
+        if ($discussion->checked_out != auth()->user()->id) {
+            $request->session()->flash('error', __('messages.generic.user_id_does_not_match'));
+            return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
+        }
+
+        if (!$discussion->canEdit()) {
+            $request->session()->flash('error', __('messages.generic.edit_not_auth'));
+            return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
+        }
+
+        $discussion->subject = $request->input('subject');
+        $discussion->slug = Str::slug($request->input('subject'), '-').'-'.$discussion->id;
+        $discussion->description = $request->input('description');
+        $discussion->media_link = $request->input('media_link');
+        $discussion->discussion_date = $request->input('_discussion_date');
+        $discussion->platform = $request->input('platform');
+        $discussion->discussion_link = $request->input('discussion_link');
+        $discussion->registering_alert = $request->input('registering_alert');
+        $discussion->is_private = $request->input('is_private');
+        $discussion->comment_alert = $request->input('comment_alert');
+        $discussion->max_attendees = $request->input('max_attendees');
+        //$discussion->meta_data = $request->input('meta_data');
+        //$discussion->extra_fields = $request->input('extra_fields');
+        //$discussion->settings = $request->input('settings');
+        $discussion->updated_by = auth()->user()->id;
+        //$layoutRefresh = LayoutItem::storeItems($discussion);
+        // Prioritize layout items over regular content when storing raw content.
+        //$discussion->raw_content = ($discussion->layoutItems()->exists()) ? $discussion->getLayoutRawContent() : strip_tags($request->input('content'));
+
+        if ($discussion->canChangeAccessLevel()) {
+            $discussion->access_level = ($request->input('access_level', null)) ? $request->input('access_level') : $discussion->access_level;
+
+            // N.B: Get also the private groups (if any) that are not returned by the form as they're disabled.
+            $groups = array_merge($request->input('groups', []), Group::getPrivateGroups($discussion));
+
+            if (!empty($groups)) {
+                $discussion->groups()->sync($groups);
+            }
+            else {
+                // Remove all groups for this discussion.
+                $discussion->groups()->sync([]);
+            }
+        }
+
+        if ($discussion->canChangeAttachments()) {
+            $discussion->owned_by = ($request->input('owned_by', null)) ? $request->input('owned_by') : $discussion->owned_by;
+        }
+
+        if ($discussion->canChangeStatus()) {
+            $discussion->status = $request->input('status');
+        }
+
+        $discussion->save();
+        //$discussion->category()->save($request->input('category'));
+        $category = Category::find($request->input('category_id'));
+        $category->discussions()->save($discussion);
+
+        //$refresh = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
+
+        if ($request->input('_close', null)) {
+            $discussion->safeCheckIn();
+            // Store the message to be displayed on the list view after the redirect.
+            $request->session()->flash('success', __('messages.discussion.update_success'));
+            $query = array_merge($request->query(), ['id' => $id, 'slug' => $discussion->slug]);
+            return response()->json(['redirect' => route('discussions', $query)]);
+        }
+        $refresh = [];
+
+        return response()->json(['success' => __('messages.discussion.update_success'), 'refresh' => $refresh]);
     }
 
     public function register(Discussion $discussion)

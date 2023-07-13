@@ -21,15 +21,19 @@
             <button class="btn btn-success" id="submit" type="button">Save</button>
         </div>
 
-        <div class="text-center">
-            <button class="btn btn-info" id="cancel" type="button">Cancel</button>
-        </div>
-
         @if (isset($discussion))
             <div class="text-center">
                 <button class="btn btn-danger" id="delete" type="button">
                     Delete
                 </button>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-info" id="cancel" data-url="{{ route('discussions.cancel', $discussion->id) }}" type="button">Cancel</button>
+            </div>
+        @else
+            <div class="text-center">
+                <button class="btn btn-info" id="cancel" data-url="{{ route('discussions.cancel', $query) }}" type="button">Cancel</button>
             </div>
         @endif
     </form>

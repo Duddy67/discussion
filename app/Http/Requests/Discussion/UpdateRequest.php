@@ -39,15 +39,15 @@ class UpdateRequest extends FormRequest
         ];
 
         if ($this->discussion->canChangeAccessLevel()) {
-            $rules['access_level'] = 'required';
+            $rules['access_level'] = 'sometimes|required';
         }
 
         if ($this->discussion->canChangeStatus()) {
-            $rules['status'] = 'required';
+            $rules['status'] = 'sometimes|required';
         }
 
         if ($this->discussion->canChangeAttachments()) {
-            $rules['owned_by'] = 'required';
+            $rules['owned_by'] = 'sometimes|required';
         }
 
         return $rules;
