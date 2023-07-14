@@ -69,7 +69,7 @@ return [
     'discussion' => [
         'create_success' => 'Discussion successfully created.',
         'update_success' => 'Discussion successfully updated.',
-        'delete_success' => 'The discussion ":title" has been successfully deleted.',
+        'delete_success' => 'The discussion ":subject" has been successfully deleted.',
         'delete_list_success' => ':number discussions have been successfully deleted.',
         'edit_not_auth' => 'You are not authorised to edit discussions.',
         'delete_not_auth' => 'You are not authorised to delete discussions.',

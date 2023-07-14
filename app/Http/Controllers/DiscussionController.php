@@ -161,11 +161,12 @@ class DiscussionController extends Controller
             'status' => $request->input('status'), 
             'description' => $request->input('description'), 
             'media_link' => $request->input('media_link'), 
-            'access_level' => $request->input('access_level'), 
-            'owned_by' => auth()->user()->id,
+            'access_level' => ($request->input('access_level', null)) ? $request->input('access_level') : 'public_ro', 
+            'owned_by' => ($request->input('owned_by', null)) ? $request->input('owned_by') : auth()->user()->id,
             'platform' => $request->input('platform'),
             'discussion_link' => $request->input('discussion_link'),
             'discussion_date' => $request->input('_discussion_date'),
+            'is_private' => $request->input('is_private'),
             'registering_alert' => $request->input('registering_alert'),
             'comment_alert' => $request->input('comment_alert'),
             'max_attendees' => $request->input('max_attendees'),
@@ -270,6 +271,25 @@ class DiscussionController extends Controller
         $refresh = [];
 
         return response()->json(['success' => __('messages.discussion.update_success'), 'refresh' => $refresh]);
+    }
+
+    /**
+     * Remove the specified discussion from storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Discussion $discussion
+     * @return Response
+     */
+    public function destroy(Request $request, Discussion $discussion)
+    {
+        if (!$discussion->canDelete()) {
+            return redirect()->route('discussions.edit', array_merge($request->query(), ['discussion' => $discussion->id]))->with('error',  __('messages.generic.delete_not_auth'));
+        }
+
+        $subject = $discussion->subject;
+        $discussion->delete();
+
+        return redirect()->route('site.index', $request->query())->with('success', __('messages.discussion.delete_success', ['subject' => $subject]));
     }
 
     public function register(Discussion $discussion)

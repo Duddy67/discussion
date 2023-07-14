@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let registerBtn = document.getElementById('register');
     let unregisterBtn = document.getElementById('unregister');
     let cancel = document.getElementById('cancel');
+    let deleteBtn = document.getElementById('delete');
 
     if (registerBtn !== null) {
         registerBtn.onclick = function(e) { 
@@ -10,16 +11,25 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location = registerBtn.dataset.url;
         }
     }
-    else if (unregisterBtn !== null) {
+
+    if (unregisterBtn !== null) {
         unregisterBtn.onclick = function(e) { 
             alert('UNREGISTER '+unregisterBtn.dataset.url);
             window.location = unregisterBtn.dataset.url;
         }
     }
-    else if (cancel !== null) {
+
+    if (cancel !== null) {
         cancel.onclick = function(e) { 
             alert('CANCEL '+cancel.dataset.url);
             window.location = cancel.dataset.url;
+        }
+    }
+
+    if (deleteBtn !== null) {
+        deleteBtn.onclick = function(e) { 
+            alert('DELETE');
+            document.getElementById('deleteItem').submit();
         }
     }
 
@@ -44,9 +54,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const spinner = document.getElementById('ajax-progress');
         spinner.classList.add('d-none');
 
-            console.log(result);
         if (status === 200) {
-            window.location.reload();
+            // Loop through the returned result.
+            for (const [key, value] of Object.entries(result)) {
+                if (key == 'redirect') {
+                    window.location.href = result.redirect;
+                }
+                else if (key == 'refresh') {
+                    refreshFieldValues(result.refresh);
+                }
+                // messages
+                else if (['success', 'warning', 'info'].includes(key)) {
+                    displayMessage(key, value);
+                }
+            }
         }
         else if (status === 422) {
             displayMessage('danger', 'Please check the form below for errors.');

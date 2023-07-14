@@ -33,6 +33,7 @@ class Discussion extends Model
         'discussion_date',
         'discussion_link',
         'max_attendees',
+        'platform',
         'is_private',
         'registering_alert',
         'comment_alert',
