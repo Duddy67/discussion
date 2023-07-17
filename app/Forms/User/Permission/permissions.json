@@ -1,49 +1,49 @@
 {
   "users": [
       {
-	"name": "create-user",
+	"name": "create-users",
 	"type": "level2",
 	"roles": "admin|manager"
       },
       {
-	"name": "update-user",
+	"name": "update-users",
 	"type": "level2",
 	"roles": "admin|manager"
       },
       {
-	"name": "delete-user",
+	"name": "delete-users",
 	"type": "level2",
 	"roles": "admin|manager",
 	"optional": "manager"
       },
       {
-	"name": "create-group",
+	"name": "create-user-groups",
 	"type": "level2",
 	"roles": "admin|manager"
       },
       {
-	"name": "update-group",
+	"name": "update-user-groups",
 	"type": "level2",
 	"roles": "admin|manager"
       },
       {
-	"name": "delete-group",
+	"name": "delete-user-groups",
 	"type": "level2",
 	"roles": "admin|manager",
 	"optional": "manager"
       },
       {
-	"name": "create-role",
+	"name": "create-user-roles",
 	"type": "level1",
 	"roles": "admin"
       },
       {
-	"name": "update-role",
+	"name": "update-user-roles",
 	"type": "level1",
 	"roles": "admin"
       },
       {
-	"name": "delete-role",
+	"name": "delete-user-roles",
 	"type": "level1",
 	"roles": "admin",
 	"optional": "admin"
@@ -51,88 +51,88 @@
   ],
   "menus": [
       {
-	"name": "create-menu",
+	"name": "create-menus",
 	"type": "level1",
 	"roles": "admin"
       },
       {
-	"name": "update-menu",
+	"name": "update-menus",
 	"type": "level1",
 	"roles": "admin"
       },
       {
-	"name": "delete-menu",
+	"name": "delete-menus",
 	"type": "level1",
 	"roles": "admin"
-      }
-  ],
-  "blog": [
-      {
-	"name": "create-post",
-	"type": "level3",
-	"roles": "admin|manager|assistant|registered"
-      },
-      {
-	"name": "update-post",
-	"type": "level3",
-	"roles": "admin|manager|assistant|registered"
-      },
-      {
-	"name": "delete-post",
-	"type": "level3",
-	"roles": "admin|manager|assistant|registered",
-	"optional": "assistant|registered"
-      },
-      {
-	"name": "create-post-category",
-	"type": "level2",
-	"roles": "admin",
-	"optional": "manager"
-      },
-      {
-	"name": "update-post-category",
-	"type": "level2",
-	"roles": "admin",
-	"optional": "manager"
-      },
-      {
-	"name": "delete-post-category",
-	"type": "level2",
-	"roles": "admin",
-	"optional": "manager"
       }
   ],
   "discussions": [
       {
-	"name": "create-discussion",
+        "name": "create-discussions",
+        "type": "level3",
+        "roles": "admin|manager|assistant|registered"
+      },
+      {
+        "name": "update-discussions",
+        "type": "level3",
+        "roles": "admin|manager|assistant|registered"
+      },
+      {
+        "name": "delete-discussions",
+        "type": "level3",
+        "roles": "admin|manager|assistant|registered",
+        "optional": "assistant|registered"
+      },
+      {
+        "name": "create-discussion-categories",
+        "type": "level2",
+        "roles": "admin",
+        "optional": "manager"
+      },
+      {
+        "name": "update-discussion-categories",
+        "type": "level2",
+        "roles": "admin",
+        "optional": "manager"
+      },
+      {
+        "name": "delete-discussion-categories",
+        "type": "level2",
+        "roles": "admin",
+        "optional": "manager"
+      }
+  ],
+  "posts": [
+      {
+	"name": "create-posts",
 	"type": "level3",
 	"roles": "admin|manager|assistant|registered"
       },
       {
-	"name": "update-discussion",
+	"name": "update-posts",
 	"type": "level3",
 	"roles": "admin|manager|assistant|registered"
       },
       {
-	"name": "delete-discussion",
+	"name": "delete-posts",
 	"type": "level3",
 	"roles": "admin|manager|assistant|registered",
 	"optional": "assistant|registered"
       },
       {
-	"name": "create-discussion-category",
+	"name": "create-post-categories",
 	"type": "level2",
 	"roles": "admin",
 	"optional": "manager"
       },
       {
-	"name": "update-discussion-category",
+	"name": "update-post-categories",
 	"type": "level2",
 	"roles": "admin",
 	"optional": "manager"
       },
       {
-	"name": "delete-discussion-category",
+	"name": "delete-post-categories",
 	"type": "level2",
 	"roles": "admin",
 	"optional": "manager"
@@ -152,13 +152,7 @@
 	"optional": "admin"
       },
       {
-	"name": "discussion-settings",
-	"type": "level1",
-	"roles": "",
-	"optional": "admin"
-      },
-      {
-	"name": "update-email",
+	"name": "update-emails",
 	"type": "level1",
 	"roles": "",
 	"optional": "admin"

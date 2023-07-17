@@ -22,15 +22,15 @@ class AdminDiscussions
         $update = ['admin.discussions.update', 'admin.discussions.edit'];
         $delete = ['admin.discussions.destroy', 'admin.discussions.massDestroy'];
 
-        if (in_array($routeName, $create) && !auth()->user()->isAllowedTo('create-discussion')) {
+        if (in_array($routeName, $create) && !auth()->user()->isAllowedTo('create-discussions')) {
             return redirect()->route('admin')->with('error', __('messages.generic.access_not_auth'));
         }
 
-        if (in_array($routeName, $update) && !auth()->user()->isAllowedTo('update-discussion') && !auth()->user()->isAllowedTo('update-own-discussion')) {
+        if (in_array($routeName, $update) && !auth()->user()->isAllowedTo('update-discussions') && !auth()->user()->isAllowedTo('update-own-discussions')) {
             return redirect()->route('admin.discussions.index')->with('error', __('messages.discussion.edit_not_auth'));
         }
 
-        if (in_array($routeName, $delete) && !auth()->user()->isAllowedTo('delete-discussion') && !auth()->user()->isAllowedTo('delete-own-discussion')) {
+        if (in_array($routeName, $delete) && !auth()->user()->isAllowedTo('delete-discussions') && !auth()->user()->isAllowedTo('delete-own-discussions')) {
             return redirect()->route('admin.discussions.index')->with('error', __('messages.discussion.delete_not_auth'));
         }
 

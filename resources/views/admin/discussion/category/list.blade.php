@@ -25,13 +25,13 @@
         </div>
     @endif
 
-    <input type="hidden" id="createItem" value="{{ route('admin.discussion.categories.create', $query) }}">
-    <input type="hidden" id="destroyItems" value="{{ route('admin.discussion.categories.index', $query) }}">
-    <input type="hidden" id="checkinItems" value="{{ route('admin.discussion.categories.massCheckIn', $query) }}">
-    <input type="hidden" id="publishItems" value="{{ route('admin.discussion.categories.massPublish', $query) }}">
-    <input type="hidden" id="unpublishItems" value="{{ route('admin.discussion.categories.massUnpublish', $query) }}">
+    <input type="hidden" id="createItem" value="{{ route('admin.discussions.categories.create', $query) }}">
+    <input type="hidden" id="destroyItems" value="{{ route('admin.discussions.categories.index', $query) }}">
+    <input type="hidden" id="checkinItems" value="{{ route('admin.discussions.categories.massCheckIn', $query) }}">
+    <input type="hidden" id="publishItems" value="{{ route('admin.discussions.categories.massPublish', $query) }}">
+    <input type="hidden" id="unpublishItems" value="{{ route('admin.discussions.categories.massUnpublish', $query) }}">
 
-    <form id="selectedItems" action="{{ route('admin.discussion.categories.index', $query) }}" method="post">
+    <form id="selectedItems" action="{{ route('admin.discussions.categories.index', $query) }}" method="post">
         @method('delete')
         @csrf
     </form>

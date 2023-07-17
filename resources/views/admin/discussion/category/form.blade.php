@@ -10,7 +10,7 @@
         </div>
     @endif
 
-    @php $action = (isset($category)) ? route('admin.discussion.categories.update', $query) : route('admin.discussion.categories.store', $query) @endphp
+    @php $action = (isset($category)) ? route('admin.discussions.categories.update', $query) : route('admin.discussions.categories.store', $query) @endphp
     <form method="post" action="{{ $action }}" id="itemForm">
         @csrf
 
@@ -61,7 +61,7 @@
             @endforeach
         </div>
 
-        <input type="hidden" id="cancelEdit" value="{{ route('admin.discussion.categories.cancel', $query) }}">
+        <input type="hidden" id="cancelEdit" value="{{ route('admin.discussions.categories.cancel', $query) }}">
         <input type="hidden" id="siteUrl" value="{{ url('/') }}">
         <input type="hidden" id="close" name="_close" value="0">
 
@@ -72,12 +72,12 @@
     <x-toolbar :items=$actions />
 
     @if (isset($category))
-        <form id="deleteItem" action="{{ route('admin.discussion.categories.destroy', $query) }}" method="post">
+        <form id="deleteItem" action="{{ route('admin.discussions.categories.destroy', $query) }}" method="post">
             @method('delete')
             @csrf
         </form>
 
-        <form id="deleteImage" action="{{ route('admin.discussion.categories.deleteImage', $query) }}" method="post">
+        <form id="deleteImage" action="{{ route('admin.discussions.categories.deleteImage', $query) }}" method="post">
             @method('delete')
             @csrf
         </form>

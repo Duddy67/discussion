@@ -18,20 +18,20 @@ class AdminDiscussionCategories
     {
 	$routeName = $request->route()->getName();
 
-        $create = ['admin.discussion.categories.index', 'admin.discussion.categories.create', 'admin.discussion.categories.store'];
-        $update = ['admin.discussion.categories.update', 'admin.discussion.categories.edit'];
-        $delete = ['admin.discussion.categories.destroy', 'admin.discussion.categories.massDestroy'];
+        $create = ['admin.discussions.categories.index', 'admin.discussions.categories.create', 'admin.discussions.categories.store'];
+        $update = ['admin.discussions.categories.update', 'admin.discussions.categories.edit'];
+        $delete = ['admin.discussions.categories.destroy', 'admin.discussions.categories.massDestroy'];
 
-	if (in_array($routeName, $create) && !auth()->user()->isAllowedTo('create-discussion-category')) {
+	if (in_array($routeName, $create) && !auth()->user()->isAllowedTo('create-discussion-categories')) {
 	    return redirect()->route('admin')->with('error', __('messages.generic.access_not_auth'));
 	}
 
-	if (in_array($routeName, $update) && !auth()->user()->isAllowedTo('update-discussion-category')) {
-	    return redirect()->route('admin.discussion.categories.index')->with('error', __('messages.category.edit_not_auth'));
+	if (in_array($routeName, $update) && !auth()->user()->isAllowedTo('update-discussion-categories')) {
+	    return redirect()->route('admin.discussions.categories.index')->with('error', __('messages.category.edit_not_auth'));
 	}
 
-	if (in_array($routeName, $delete) && !auth()->user()->isAllowedTo('delete-discussion-category')) {
-	    return redirect()->route('admin.discussion.categories.index')->with('error', __('messages.category.delete_not_auth'));
+	if (in_array($routeName, $delete) && !auth()->user()->isAllowedTo('delete-discussion-categories')) {
+	    return redirect()->route('admin.discussions.categories.index')->with('error', __('messages.category.delete_not_auth'));
 	}
 
         return $next($request);

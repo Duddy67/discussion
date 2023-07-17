@@ -3,7 +3,7 @@
 @section ('main')
     <h3>@php echo __('labels.discussion.blog_global_settings'); @endphp</h3>
 
-    <form method="post" action="{{ route('admin.discussion.settings.update', $query ) }}" id="itemForm">
+    <form method="post" action="{{ route('admin.discussions.settings.update', $query ) }}" id="itemForm">
         @csrf
         @method('patch')
 
