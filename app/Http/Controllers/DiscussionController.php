@@ -44,6 +44,7 @@ class DiscussionController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except(['show']);
+        // Unregistered users can access discussions.
         $this->middleware('discussions')->except(['show']);
         $this->model = new Discussion;
     }
@@ -122,11 +123,11 @@ class DiscussionController extends Controller
                                     ->findOrFail($id);
 
         if (!$discussion->canAccess()) {
-            return redirect()->route('admin.discussions.index')->with('error',  __('messages.generic.access_not_auth'));
+            return redirect()->route('discussions.show', ['id' => $discussion->id, 'slug' => $discussion->slug])->with('error',  __('messages.generic.access_not_auth'));
         }
 
         if ($discussion->checked_out && $discussion->checked_out != auth()->user()->id && !$discussion->isUserSessionTimedOut()) {
-            return redirect()->route('admin.discussions.index')->with('error',  __('messages.generic.checked_out'));
+            return redirect()->route('discussions.show', ['id' => $discussion->id, 'slug' => $discussion->slug])->with('error',  __('messages.generic.checked_out'));
         }
 
         $discussion->checkOut();
@@ -204,12 +205,12 @@ class DiscussionController extends Controller
     {
         if ($discussion->checked_out != auth()->user()->id) {
             $request->session()->flash('error', __('messages.generic.user_id_does_not_match'));
-            return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
+            return response()->json(['redirect' => route('discussions.show', ['id' => $discussion->id, 'slug' => $discussion->slug])]);
         }
 
         if (!$discussion->canEdit()) {
             $request->session()->flash('error', __('messages.generic.edit_not_auth'));
-            return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
+            return response()->json(['redirect' => route('discussions.show', ['id' => $discussion->id, 'slug' => $discussion->slug])]);
         }
 
         $discussion->subject = $request->input('subject');
@@ -266,7 +267,7 @@ class DiscussionController extends Controller
             // Store the message to be displayed on the list view after the redirect.
             $request->session()->flash('success', __('messages.discussion.update_success'));
             $query = array_merge($request->query(), ['id' => $id, 'slug' => $discussion->slug]);
-            return response()->json(['redirect' => route('discussions', $query)]);
+            return response()->json(['redirect' => route('discussions.show', $query)]);
         }
         $refresh = [];
 
@@ -300,14 +301,14 @@ class DiscussionController extends Controller
             $discussion->registrations()->save($registration);
         }
 
-        return redirect()->route('discussions', ['id' => $discussion->id, 'slug' => $discussion->slug]);
+        return redirect()->route('discussions.show', ['id' => $discussion->id, 'slug' => $discussion->slug]);
     }
 
     public function unregister(Discussion $discussion)
     {
         $discussion->registrations()->where('user_id', auth()->user()->id)->delete();
 
-        return redirect()->route('discussions', ['id' => $discussion->id, 'slug' => $discussion->slug]);
+        return redirect()->route('discussions.show', ['id' => $discussion->id, 'slug' => $discussion->slug]);
     }
 
     public function saveComment(CommentStoreRequest $request, $id, $slug)

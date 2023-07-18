@@ -4,7 +4,7 @@
 
     @include('themes.starter.partials.discussion.time')
 
-    <div>{{ $discussion->nickname}}</div>
+    <div>@lang ('labels.discussion.organiser'): {{ $discussion->nickname}}</div>
 
     <div class="content">
         {!! $discussion->description !!}
@@ -23,6 +23,10 @@
 
     @if ($discussion->canEdit() && $discussion->getTimeBeforeDiscussionInMinutes())
         <a href="{{ route('discussions.edit', $discussion->id) }}" class="btn btn-success">Edit</a>
+    @endif
+
+    @if (!auth()->check())
+        <div>@lang ('messages.discussion.registration_required')</div>
     @endif
 
 @push ('scripts')

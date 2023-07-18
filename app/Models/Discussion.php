@@ -65,15 +65,21 @@ class Discussion extends Model
      */
     public function registrations()
     {
-        return $this->hasMany(Registration::class)->where('on_waiting_list', false);
+        return $this->hasMany(Registration::class)
+                    ->join('users', 'users.id', '=', 'user_id')
+                    ->select('discussion_registrations.*', 'users.nickname as nickname')
+                    ->where('on_waiting_list', false);
     }
 
     /**
-     * The registrations that belong to the discussion.
+     * The registrations on the waiting list that belong to the discussion.
      */
     public function registrationsOnWaitingList()
     {
-        return $this->hasMany(Registration::class)->where('on_waiting_list', true);
+        return $this->hasMany(Registration::class)
+                    ->join('users', 'users.id', '=', 'user_id')
+                    ->select('discussion_registrations.*', 'users.nickname as nickname')
+                    ->where('on_waiting_list', true)->orderBy('discussion_registrations.created_at');
     }
 
     /**

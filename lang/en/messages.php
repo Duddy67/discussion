@@ -80,7 +80,8 @@ return [
         'delete_comment_success' => 'Comment successfully deleted.',
         'edit_comment_not_auth' => 'You are not authorised to edit this comment.',
         'delete_comment_not_auth' => 'You are not authorised to delete this comment.',
-        'comments_authentication_required' => 'You must be authenticated to discussion a comment.',
+        'comments_authentication_required' => 'You must be authenticated to post a comment.',
+        'registration_required' => 'You must be registered to attend this discussion.',
     ],
     'category' => [
         'create_success' => 'Category successfully created.',
