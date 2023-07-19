@@ -65,21 +65,7 @@ class Discussion extends Model
      */
     public function registrations()
     {
-        return $this->hasMany(Registration::class)
-                    ->join('users', 'users.id', '=', 'user_id')
-                    ->select('discussion_registrations.*', 'users.nickname as nickname')
-                    ->where('on_waiting_list', false);
-    }
-
-    /**
-     * The registrations on the waiting list that belong to the discussion.
-     */
-    public function registrationsOnWaitingList()
-    {
-        return $this->hasMany(Registration::class)
-                    ->join('users', 'users.id', '=', 'user_id')
-                    ->select('discussion_registrations.*', 'users.nickname as nickname')
-                    ->where('on_waiting_list', true)->orderBy('discussion_registrations.created_at');
+        return $this->hasMany(Registration::class);
     }
 
     /**
@@ -206,6 +192,23 @@ class Discussion extends Model
         }
 
         return $dates['now']->diffInMinutes($dates['discussion']);
+    }
+
+    public function getAttendees() 
+    {
+        return $this->registrations()
+                    ->join('users', 'users.id', '=', 'user_id')
+                    ->select('discussion_registrations.*', 'users.nickname as nickname')
+                    ->where('on_waiting_list', false)->get();
+    }
+
+    public function getAttendeesOnWaitingList() 
+    {
+        return $this->hasMany(Registration::class)
+                    ->join('users', 'users.id', '=', 'user_id')
+                    ->select('discussion_registrations.*', 'users.nickname as nickname')
+                    ->where('on_waiting_list', true)
+                    ->orderBy('discussion_registrations.created_at')->get();
     }
 
     public function isUserRegistered(): bool

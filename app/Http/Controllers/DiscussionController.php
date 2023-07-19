@@ -184,10 +184,14 @@ class DiscussionController extends Controller
             $discussion->groups()->attach($request->input('groups'));
         }
 
+        // The organizer is automatically registered to the discussion.
+        $this->register($discussion);
+
         $request->session()->flash('success', __('messages.discussion.create_success'));
 
         if ($request->input('_close', null)) {
-            //return response()->json(['redirect' => route('discussions.index', $request->query())]);
+            $query = array_merge($request->query(), ['id' => $id, 'slug' => $discussion->slug]);
+            return response()->json(['redirect' => route('discussions.show', $query)]);
         }
 
         // Redirect to the edit form.

@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let registerBtn = document.getElementById('register');
     let unregisterBtn = document.getElementById('unregister');
+    let registerWaitingListBtn = document.getElementById('registerWaitingList');
+    let unregisterWaitingListBtn = document.getElementById('unregisterWaitingList');
     let cancel = document.getElementById('cancel');
     let deleteBtn = document.getElementById('delete');
 
@@ -16,6 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
         unregisterBtn.onclick = function(e) { 
             alert('UNREGISTER '+unregisterBtn.dataset.url);
             window.location = unregisterBtn.dataset.url;
+        }
+    }
+
+    if (registerWaitingListBtn !== null) {
+        registerWaitingListBtn.onclick = function(e) { 
+            alert('REGISTER WAITING LIST'+registerWaitingListBtn.dataset.url);
+            window.location = registerWaitingListBtn.dataset.url;
+        }
+    }
+
+    if (unregisterWaitingListBtn !== null) {
+        unregisterWaitingListBtn.onclick = function(e) { 
+            alert('UNREGISTER WAITING LIST'+unregisterWaitingListBtn.dataset.url);
+            window.location = unregisterWaitingListBtn.dataset.url;
         }
     }
 

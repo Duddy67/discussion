@@ -116,21 +116,7 @@ class User extends Authenticatable
      */
     public function registrations()
     {
-        return $this->hasMany(Registration::class)
-                    ->join('discussions', 'discussion.id', '=', 'discussion_id')
-                    ->select('discussion_registrations.*', 'discussion.subject as subject')
-                    ->where('on_waiting_list', false);
-    }
-
-    /**
-     * The registrations on the waiting list that belong to the user.
-     */
-    public function registrationsOnWaitingList()
-    {
-        return $this->hasMany(Registration::class)
-                    ->join('discussions', 'discussion.id', '=', 'discussion_id')
-                    ->select('discussion_registrations.*', 'discussion.subject as subject')
-                    ->where('on_waiting_list', true)->orderBy('discussion_registrations.created_at');
+        return $this->hasMany(Registration::class);
     }
 
     /**

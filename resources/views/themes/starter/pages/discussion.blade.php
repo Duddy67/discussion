@@ -9,17 +9,16 @@
     <div class="content">
         {!! $discussion->description !!}
     </div>
+    <div>Platform: {{ __('labels.discussion.'.$discussion->platform) }}</div>
     <div><img src="{{ $discussion->getMediaThumbnail() }}"></div>
 
-    <div>Attendees: {{ $discussion->registrations->count() }}/{{ $discussion->max_attendees }}</div>
+    <div>Attendees: {{ $discussion->getAttendees()->count() }}/{{ $discussion->max_attendees }}</div>
 
     @include('themes.starter.partials.discussion.registration')
 
-    @if ($discussion->registrationsOnWaitingList->count())
-        <div>Waiting list: {{ $discussion->registrationsOnWaitingList->count() }}</div>
+    @if ($discussion->getAttendeesOnWaitingList()->count())
+        <div>Waiting list: {{ $discussion->getAttendeesOnWaitingList()->count() }}</div>
     @endif
-
-    <div>Platform: {{ __('labels.discussion.'.$discussion->platform) }}</div>
 
     @if ($discussion->canEdit() && $discussion->getTimeBeforeDiscussionInMinutes())
         <a href="{{ route('discussions.edit', $discussion->id) }}" class="btn btn-success">Edit</a>
