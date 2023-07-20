@@ -4,21 +4,13 @@
 
     @include('themes.starter.partials.discussion.time')
 
-    <div>@lang ('labels.discussion.organiser'): {{ $discussion->nickname}}</div>
-
     <div class="content">
         {!! $discussion->description !!}
     </div>
     <div>Platform: {{ __('labels.discussion.'.$discussion->platform) }}</div>
     <div><img src="{{ $discussion->getMediaThumbnail() }}"></div>
 
-    <div>Attendees: {{ $discussion->getAttendees()->count() }}/{{ $discussion->max_attendees }}</div>
-
     @include('themes.starter.partials.discussion.registration')
-
-    @if ($discussion->getAttendeesOnWaitingList()->count())
-        <div>Waiting list: {{ $discussion->getAttendeesOnWaitingList()->count() }}</div>
-    @endif
 
     @if ($discussion->canEdit() && $discussion->getTimeBeforeDiscussionInMinutes())
         <a href="{{ route('discussions.edit', $discussion->id) }}" class="btn btn-success">Edit</a>

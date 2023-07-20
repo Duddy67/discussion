@@ -173,7 +173,7 @@ class DiscussionController extends Controller
             'max_attendees' => $request->input('max_attendees'),
         ]);
 
-        $discussion->slug = Str::slug($discussion->subject, '-').'-'.$discussion->id;
+        /*$discussion->slug = Str::slug($discussion->subject, '-').'-'.$discussion->id;
 
         $discussion->save();
 
@@ -182,7 +182,7 @@ class DiscussionController extends Controller
 
         if ($request->input('groups') !== null) {
             $discussion->groups()->attach($request->input('groups'));
-        }
+        }*/
 
         // The organizer is automatically registered to the discussion.
         $this->register($discussion);
@@ -218,7 +218,7 @@ class DiscussionController extends Controller
         }
 
         $discussion->subject = $request->input('subject');
-        $discussion->slug = Str::slug($request->input('subject'), '-').'-'.$discussion->id;
+        //$discussion->slug = Str::slug($request->input('subject'), '-').'-'.$discussion->id;
         $discussion->description = $request->input('description');
         $discussion->media_link = $request->input('media_link');
         $discussion->discussion_date = $request->input('_discussion_date');

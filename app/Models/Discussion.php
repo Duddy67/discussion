@@ -13,6 +13,8 @@ use App\Models\User\Group;
 use App\Traits\AccessLevel;
 use App\Traits\CheckInCheckOut;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Request;
 
 class Discussion extends Model
 {
@@ -74,6 +76,27 @@ class Discussion extends Model
     public function groups()
     {
         return $this->belongsToMany(Group::class);
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::updated(function (Discussion $discussion) {
+            $discussion->slug = Str::slug($discussion->subject, '-').'-'.$discussion->id;
+            //$discussion->saveQuietly();
+
+            //$category = Category::find(request('category_id'));
+            //$category->discussions()->save($discussion);
+        });
+
+        static::deleting(function (Discussion $discussion) {
+            $discussion->groups()->detach();
+            $discussion->registrations()->delete();
+        });
     }
 
     /*
