@@ -173,8 +173,6 @@ class DiscussionController extends Controller
             'max_attendees' => $request->input('max_attendees'),
         ]);
 
-        /*$discussion->slug = Str::slug($discussion->subject, '-').'-'.$discussion->id;
-
         $discussion->save();
 
         $category = Category::find($request->input('category_id'));
@@ -182,9 +180,9 @@ class DiscussionController extends Controller
 
         if ($request->input('groups') !== null) {
             $discussion->groups()->attach($request->input('groups'));
-        }*/
+        }
 
-        // The organizer is automatically registered to the discussion.
+        // The owner (organizer) is automatically registered to the discussion.
         $this->register($discussion);
 
         $request->session()->flash('success', __('messages.discussion.create_success'));
@@ -260,7 +258,8 @@ class DiscussionController extends Controller
         }
 
         $discussion->save();
-        //$discussion->category()->save($request->input('category'));
+
+        $discussion->category()->save($request->input('category'));
         $category = Category::find($request->input('category_id'));
         $category->discussions()->save($discussion);
 
@@ -300,7 +299,7 @@ class DiscussionController extends Controller
     public function register(Discussion $discussion)
     {
         if (!$discussion->isUserRegistered() && !$discussion->isUserOnWaitingList()) {
-            $waitingList = ($discussion->registrations->count() == $discussion->max_attendees) ? true : false;
+            $waitingList = ($discussion->isSoldOut()) ? true : false;
             $registration = new Registration(['user_id' => auth()->user()->id, 'on_waiting_list' => $waitingList]);
             $discussion->registrations()->save($registration);
         }
@@ -311,6 +310,14 @@ class DiscussionController extends Controller
     public function unregister(Discussion $discussion)
     {
         $discussion->registrations()->where('user_id', auth()->user()->id)->delete();
+
+        if (!$discussion->isSoldOut() && $discussion->getAttendeesOnWaitingList()->count()) {
+            // Switch the first user on the waiting list in the main list.
+            $registration = new Registration(['user_id' => $discussion->getAttendeesOnWaitingList()[0]->user_id, 'on_waiting_list' => false]);
+            $discussion->registrations()->save($registration);
+            // Remove this user from the waiting list.
+            $discussion->registrations()->where(['user_id' => $discussion->getAttendeesOnWaitingList()[0]->user_id, 'on_waiting_list' => true])->delete();
+        }
 
         return redirect()->route('discussions.show', ['id' => $discussion->id, 'slug' => $discussion->slug]);
     }

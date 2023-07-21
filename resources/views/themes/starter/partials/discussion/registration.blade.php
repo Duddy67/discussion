@@ -20,27 +20,27 @@
         @endforeach
     </table>
 
-    @if (auth()->check())
-        @if ($discussion->getAttendees()->count() < $discussion->max_attendees && auth()->user()->id != $discussion->owned_by)
-            @if (!$discussion->isUserRegistered())
-                <div class="text-center">
-                    <button class="btn btn-success" id="register" data-url="{{ route('discussions.register', $discussion->id) }}" type="button">
-                        Register
-                    </button>
-                </div>
-            @else
-                <div class="text-center">
-                    <button class="btn btn-danger" id="unregister" data-url="{{ route('discussions.unregister', $discussion->id) }}" type="button">
-                        Unregister
-                    </button>
-                </div>
-            @endif
+    @if (auth()->check() && auth()->user()->id != $discussion->owned_by)
+        @if (!$discussion->isSoldOut() && !$discussion->isUserRegistered())
+            <div class="text-center">
+                <button class="btn btn-success" id="register" data-url="{{ route('discussions.register', $discussion->id) }}" type="button">
+                    Register
+                </button>
+            </div>
         @endif
 
-        @if ($discussion->getAttendees()->count() >= $discussion->max_attendees && auth()->user()->id != $discussion->owned_by)
+        @if ($discussion->isUserRegistered())
+            <div class="text-center">
+                <button class="btn btn-danger" id="unregister" data-url="{{ route('discussions.unregister', $discussion->id) }}" type="button">
+                    Unregister
+                </button>
+            </div>
+        @endif
+
+        @if ($discussion->isSoldOut() && !$discussion->isUserRegistered())
             @if (!$discussion->isUserOnWaitingList())
                 <div class="text-center">
-                    <button class="btn btn-success" id="registerWaitingList" data-url="{{ route('discussions.register', $discussion->id) }}" type="button">
+                    <button class="btn btn-secondary" id="registerWaitingList" data-url="{{ route('discussions.register', $discussion->id) }}" type="button">
                         Register waiting list
                     </button>
                 </div>

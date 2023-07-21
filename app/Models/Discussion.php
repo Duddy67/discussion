@@ -85,12 +85,10 @@ class Discussion extends Model
      */
     protected static function booted(): void
     {
-        static::updated(function (Discussion $discussion) {
+        static::saved(function (Discussion $discussion) {
             $discussion->slug = Str::slug($discussion->subject, '-').'-'.$discussion->id;
-            //$discussion->saveQuietly();
-
-            //$category = Category::find(request('category_id'));
-            //$category->discussions()->save($discussion);
+            // Save without triggering any events and prevent infinite loop.
+            $discussion->saveQuietly();
         });
 
         static::deleting(function (Discussion $discussion) {
@@ -217,21 +215,23 @@ class Discussion extends Model
         return $dates['now']->diffInMinutes($dates['discussion']);
     }
 
-    public function getAttendees() 
+    private function attendees(bool $onWaitingList = false): \Illuminate\Database\Eloquent\Collection 
     {
         return $this->registrations()
                     ->join('users', 'users.id', '=', 'user_id')
                     ->select('discussion_registrations.*', 'users.nickname as nickname')
-                    ->where('on_waiting_list', false)->get();
+                    ->where('on_waiting_list', $onWaitingList)
+                    ->orderBy('discussion_registrations.created_at', 'asc')->get();
     }
 
-    public function getAttendeesOnWaitingList() 
+    public function getAttendees(): \Illuminate\Database\Eloquent\Collection
     {
-        return $this->hasMany(Registration::class)
-                    ->join('users', 'users.id', '=', 'user_id')
-                    ->select('discussion_registrations.*', 'users.nickname as nickname')
-                    ->where('on_waiting_list', true)
-                    ->orderBy('discussion_registrations.created_at')->get();
+        return $this->attendees();
+    }
+
+    public function getAttendeesOnWaitingList(): \Illuminate\Database\Eloquent\Collection 
+    {
+        return $this->attendees(true);
     }
 
     public function isUserRegistered(): bool
@@ -242,6 +242,11 @@ class Discussion extends Model
     public function isUserOnWaitingList(): bool
     {
         return (!auth()->check()) ? false : $this->registrations()->where(['user_id' => auth()->user()->id, 'on_waiting_list' => true])->exists();
+    }
+
+    public function isSoldOut(): bool
+    {
+        return ($this->getAttendees()->count() >= $this->max_attendees) ? true : false;
     }
 
     /*
