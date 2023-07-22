@@ -20,6 +20,7 @@ use App\Http\Requests\Discussion\UpdateRequest;
 use Illuminate\Support\Str;
 use App\Http\Requests\Discussion\Comment\StoreRequest as CommentStoreRequest;
 use App\Http\Requests\Discussion\Comment\UpdateRequest as CommentUpdateRequest;
+use Carbon\Carbon;
 
 
 class DiscussionController extends Controller
@@ -43,10 +44,33 @@ class DiscussionController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except(['show']);
+        $this->middleware('auth')->except(['show', 'index']);
         // Unregistered users can access discussions.
-        $this->middleware('discussions')->except(['show']);
+        $this->middleware('discussions')->except(['show', 'index']);
         $this->model = new Discussion;
+    }
+
+    public function index(Request $request)
+    {
+        // Get the current day (yyyy-mm-dd).
+        $day = Carbon::now()->toDateString();
+
+        if ($request->has('_day_picker') && $request->filled('_day_picker')) {
+            $day = $request->input('_day_picker');
+        }
+
+        $discussions = Discussion::select('discussions.*', 'users.nickname as nickname')
+			->leftJoin('users', 'discussions.owned_by', '=', 'users.id')
+			->where('discussion_date', 'LIKE', $day.'%')
+                        ->orderBy('discussion_date', 'asc')->get();
+
+        $menu = Menu::getMenu('main-menu');
+        $theme = Setting::getValue('website', 'theme', 'starter');
+        $query = $request->query();
+        $timezone = Setting::getValue('app', 'timezone');
+        $page = 'discussion.day-by-day';
+
+        return view('themes.'.$theme.'.index', compact('page', 'menu', 'discussions', 'timezone', 'query'));
     }
 
     public function show(Request $request, $id, $slug)

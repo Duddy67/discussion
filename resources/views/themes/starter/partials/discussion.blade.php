@@ -1,6 +1,6 @@
 <tr>
-    <th scope="row">1</th>
-    <td><a href="{{ url($discussion->getUrl()) }}">{{ $discussion->subject }}</a></td>
+    <th scope="row"><a href="{{ url($discussion->getUrl()) }}">{{ $discussion->subject }}</a></th>
     <td>@date ($discussion->discussion_date->tz($timezone))</td>
+    <td>{{ $discussion->organizer }}</td>
     <td>{{ $discussion->getAttendees()->count() }}/{{ $discussion->max_attendees }}</td>
 </tr>

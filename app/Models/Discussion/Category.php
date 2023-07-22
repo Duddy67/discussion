@@ -126,7 +126,7 @@ class Category extends Model
     public function getUrl()
     {
         $segments = Setting::getSegments('Discussion');
-        return '/'.$segments['category'].'/'.$this->id.'/'.$this->slug;
+        return '/'.$segments['categories'].'/'.$this->id.'/'.$this->slug;
     }
 
     /*
@@ -153,7 +153,7 @@ class Category extends Model
         $query = $this->getQuery($request);
 
         if ($search !== null) {
-            $query->where('discussions.title', 'like', '%'.$search.'%');
+            $query->where('discussions.subject', 'like', '%'.$search.'%');
         }
 
         return $query->paginate($perPage);
@@ -165,7 +165,7 @@ class Category extends Model
     private function getQuery(Request $request)
     {
         $query = Discussion::query();
-        $query->select('discussions.*', 'users.name as owner_name')->leftJoin('users', 'discussions.owned_by', '=', 'users.id');
+        $query->select('discussions.*', 'users.nickname as organizer')->leftJoin('users', 'discussions.owned_by', '=', 'users.id');
         // Join the role tables to get the owner's role level.
         $query->join('model_has_roles', 'discussions.owned_by', '=', 'model_id')->join('roles', 'roles.id', '=', 'role_id');
 
@@ -209,18 +209,7 @@ class Category extends Model
         if ($settings['discussion_ordering'] != 'no_ordering') {
             // Extract the ordering name and direction from the setting value.
             preg_match('#^([a-z-0-9_]+)_(asc|desc)$#', $settings['discussion_ordering'], $ordering);
-
-            // Check for numerical sorting.
-            if ($ordering[1] == 'order') {
-                $query->join('ordering_category_discussion', function ($join) use ($ordering) { 
-                    $join->on('discussions.id', '=', 'discussion_id')
-                         ->where('category_id', '=', $this->id);
-                })->orderBy('discussion_order', $ordering[2]);
-            }
-            // Regular sorting.
-            else {
-                $query->orderBy($ordering[1], $ordering[2]);
-            }
+            $query->orderBy($ordering[1], $ordering[2]);
         }
 
         return $query;

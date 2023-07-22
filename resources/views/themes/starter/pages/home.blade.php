@@ -1,6 +1,6 @@
 
 @if (isset($category) && $category)
-    <ul class="post-list">
+    <table class="table">
 	@if (count($discussions))
 	    @foreach ($discussions as $discussion)
 		@include ('themes.starter.partials.discussion')
@@ -8,7 +8,7 @@
 	@else
 	    <div>No discussion</div>
 	@endif
-    </ul>
+    </table>
 @endif
 
 @push ('scripts')

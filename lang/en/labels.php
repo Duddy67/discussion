@@ -82,6 +82,10 @@ return [
 	'skype' => 'Skype',
 	'google_meet' => 'Google Meet',
 	'organiser' => 'Organiser',
+	'subject_asc' => 'Subject ascendant',
+	'subject_desc' => 'Subject descendant',
+	'discussion_date_asc' => 'Discussion date ascendant',
+	'discussion_date_desc' => 'Discussion date descendant',
     ],
     'category' => [
 	'create_category' => 'Create a category',

@@ -21,6 +21,10 @@
     @endif
 
     <div>
+        <a href="{{ url('/'.$segments['discussions'].$discussion->category->getUrl()) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">{{ $discussion->category->name }}</a>
+    </div>
+
+    <div>
         <img src="{{ $discussion->getMediaThumbnail() }}">
     </div>
 
