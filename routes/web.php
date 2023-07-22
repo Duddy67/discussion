@@ -12,6 +12,7 @@ use App\Http\Controllers\Cms\FileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\Post\CategoryController as PostCategoryController;
 use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\Discussion\CategoryController as DiscussionCategoryController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\SearchController;
@@ -43,6 +44,7 @@ Route::get('/'.$segments['discussions'].'/unregister/{discussion}', [DiscussionC
 Route::get('/'.$segments['discussions'].'/cancel/{discussion?}', [DiscussionController::class, 'cancel'])->name('discussions.cancel');
 Route::resource($segments['discussions'], DiscussionController::class)->except(['show', 'index']);
 Route::get('/'.$segments['discussions'].'/{id}/{slug}', [DiscussionController::class, 'show'])->name('discussions.show');
+Route::get('/'.$segments['discussions'].'/'.$segments['categories'].'/{id}/{slug}', [DiscussionCategoryController::class, 'index'])->name('discussions.categories');
 
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

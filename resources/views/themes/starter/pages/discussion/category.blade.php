@@ -18,7 +18,7 @@
     </div>
 @endif
 
-<ul class="discussion-list pt-4">
+<table class="table">
     @if (count($discussions))
 	@foreach ($discussions as $discussion)
 	    @include ('themes.starter.partials.discussion')
@@ -26,13 +26,9 @@
     @else
 	<div>No discussion</div>
     @endif
-</ul>
+</table>
 
 <x-pagination :items=$discussions />
-
-@if ($settings['show_subcategories'])
-    @include ('themes.starter.partials.discussion.subcategories')
-@endif
 
 @push ('scripts')
     <script type="text/javascript" src="{{ $public }}/js/discussion/category.js"></script>

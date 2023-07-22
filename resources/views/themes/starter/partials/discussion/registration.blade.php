@@ -7,7 +7,7 @@
                 @if ($attendee->user_id == $discussion->owned_by)
                     <h6>{{ $attendee->nickname }} <span class="badge bg-primary">Organizer</span></h6>
                 @else
-                    {{ $attendee->nickname }}
+                    <h6>{{ $attendee->nickname }}</h6>
                 @endif
             </td></tr>
         @endforeach
@@ -16,7 +16,9 @@
     <table class="table caption-top">
         <caption>Waiting list: {{ $discussion->getAttendeesOnWaitingList()->count() }}</caption>
         @foreach ($discussion->getAttendeesOnWaitingList() as $attendee)
-            <tr><td>{{ $attendee->nickname }}</tr></td>
+            <tr><td>
+                <h6>{{ $attendee->nickname }}</h6>
+            </tr></td>
         @endforeach
     </table>
 

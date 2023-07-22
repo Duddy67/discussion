@@ -53,6 +53,7 @@ class Discussion extends Model
     ];
 
     const MAX_ATTENDEES = 10;
+    const DELAY_BEFORE_SHOWING_LINK = 30;
 
     /**
      * Get the category that owns the discussion.

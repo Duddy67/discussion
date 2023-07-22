@@ -1,14 +1,28 @@
     <h1 class="h2"><a href="{{ url($discussion->getUrl()) }}">{{ $discussion->subject}}</a></h1>
 
-    <div>@date ($discussion->discussion_date->tz($timezone))</div>
+    <div>
+        @date ($discussion->discussion_date->tz($timezone))
+    </div>
 
     @include('themes.starter.partials.discussion.time')
 
     <div class="content">
         {!! $discussion->description !!}
     </div>
-    <div>Platform: {{ __('labels.discussion.'.$discussion->platform) }}</div>
-    <div><img src="{{ $discussion->getMediaThumbnail() }}"></div>
+
+    <div>
+        Platform: {{ __('labels.discussion.'.$discussion->platform) }}
+    </div>
+
+    @if ($discussion->getTimeBeforeDiscussionInMinutes() < $discussion::DELAY_BEFORE_SHOWING_LINK)
+        <div>
+            {{ $discussion->discussion_link }}
+        </div>
+    @endif
+
+    <div>
+        <img src="{{ $discussion->getMediaThumbnail() }}">
+    </div>
 
     @include('themes.starter.partials.discussion.registration')
 
