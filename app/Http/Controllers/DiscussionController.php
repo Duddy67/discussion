@@ -53,15 +53,15 @@ class DiscussionController extends Controller
     public function index(Request $request)
     {
         // Get the current day (yyyy-mm-dd).
-        $day = Carbon::now()->toDateString();
+        $daypicker = Carbon::now()->toDateString();
 
         if ($request->has('_day_picker') && $request->filled('_day_picker')) {
-            $day = $request->input('_day_picker');
+            $daypicker = $request->input('_day_picker');
         }
 
-        $discussions = Discussion::select('discussions.*', 'users.nickname as nickname')
-			->leftJoin('users', 'discussions.owned_by', '=', 'users.id')
-			->where('discussion_date', 'LIKE', $day.'%')
+        $discussions = Discussion::select('discussions.*', 'users.nickname as organizer')
+			->join('users', 'discussions.owned_by', '=', 'users.id')
+			->where('discussion_date', 'LIKE', $daypicker.'%')
                         ->orderBy('discussion_date', 'asc')->get();
 
         $menu = Menu::getMenu('main-menu');
@@ -70,7 +70,7 @@ class DiscussionController extends Controller
         $timezone = Setting::getValue('app', 'timezone');
         $page = 'discussion.day-by-day';
 
-        return view('themes.'.$theme.'.index', compact('page', 'menu', 'discussions', 'timezone', 'query'));
+        return view('themes.'.$theme.'.index', compact('page', 'menu', 'discussions', 'daypicker', 'timezone', 'query'));
     }
 
     public function show(Request $request, $id, $slug)
@@ -102,9 +102,10 @@ class DiscussionController extends Controller
         $timezone = Setting::getValue('app', 'timezone');
         //$metaData = $discussion->meta_data;
         $segments = Setting::getSegments('Discussion');
+        $daypicker = ($request->has('_day_picker')) ? $request->input('_day_picker') : 0;
 	$query = array_merge($request->query(), ['id' => $id, 'slug' => $slug]);
 
-        return view('themes.'.$theme.'.index', compact('page', 'menu', 'id', 'slug', 'discussion', 'segments', 'timezone', 'query'));
+        return view('themes.'.$theme.'.index', compact('page', 'menu', 'id', 'slug', 'discussion', 'segments', 'daypicker', 'timezone', 'query'));
     }
 
     public function create(Request $request)

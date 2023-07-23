@@ -54,7 +54,7 @@
     <!-- Adds possible extra js scripts pushed by pages and partials. -->
     <script type="text/javascript" src="{{ asset('/vendor/adminlte/plugins/moment/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/vendor/adminlte/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('/js/daterangepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/daypicker.js') }}"></script>
     @stack ('scripts')
 
     @include('themes.starter.partials.cookie-info.index')

@@ -18,15 +18,25 @@
     </div>
 @endif
 
-<table class="table">
-    @if (count($discussions))
-	@foreach ($discussions as $discussion)
-	    @include ('themes.starter.partials.discussion')
-	@endforeach
-    @else
-	<div>No discussion</div>
-    @endif
-</table>
+@if (!count($discussions))
+    <div>No discussion</div>
+@else
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Discussion</th>
+            <th scope="col">Time</th>
+            <th scope="col">Organizer</th>
+            <th scope="col">Attendees</th>
+          </tr>
+        </thead>
+        <tbody>
+        @foreach ($discussions as $discussion)
+            @include ('themes.starter.partials.discussion')
+        @endforeach
+        </tbody>
+    </table>
+@endif
 
 <x-pagination :items=$discussions />
 

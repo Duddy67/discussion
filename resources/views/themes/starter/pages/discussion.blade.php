@@ -20,6 +20,12 @@
         </div>
     @endif
 
+    @if ($daypicker)
+        <div>
+            <a href="{{ url('/'.$segments['discussions']) }}{{ '?_day_picker='.$daypicker }}" class="btn btn-success btn-sm active" role="button" aria-pressed="true">{{ \Carbon\Carbon::parse($daypicker, $timezone)->isoFormat('MMM Do YY') }}</a>
+        </div>
+    @endif
+
     <div>
         <a href="{{ url('/'.$segments['discussions'].$discussion->category->getUrl()) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">{{ $discussion->category->name }}</a>
     </div>
