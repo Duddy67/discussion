@@ -1,5 +1,5 @@
 @php $format = (isset($daypicker)) ? 'HH:m' : 'Do MMM YY'; @endphp
-<tr>
+<tr class="{{ $discussion->isUserRegistered() ? 'table-primary' : '' }}">
     <th scope="row"><a href="{{ url($discussion->getUrl()) }}{{ isset($daypicker) ? '?_day_picker='.$daypicker : '' }}">{{ $discussion->subject }}</a></th>
     @if (isset($daypicker))
         <td><span class="badge bg-secondary">{{ $discussion->category->name }}</span></td>
