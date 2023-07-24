@@ -44,7 +44,9 @@
         <div>@lang ('messages.discussion.registration_required')</div>
     @endif
 
+    @include('themes.starter.partials.discussion.comments')
+
 @push ('scripts')
-    <script src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>
-    <script src="{{ asset('/js/discussion.js') }}"></script>
+    <!--<script src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>-->
+    <!--<script src="{{ asset('/js/discussion.js') }}"></script>-->
 @endpush

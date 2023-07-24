@@ -68,7 +68,7 @@ class DiscussionController extends Controller
         $theme = Setting::getValue('website', 'theme', 'starter');
         $query = $request->query();
         $timezone = Setting::getValue('app', 'timezone');
-        $page = 'discussion.day-by-day';
+        $page = 'discussions';
 
         return view('themes.'.$theme.'.index', compact('page', 'menu', 'discussions', 'daypicker', 'timezone', 'query'));
     }

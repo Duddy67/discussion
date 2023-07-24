@@ -33,15 +33,19 @@ use App\Models\Setting;
 $segments = Setting::getSegments('Post');
 Route::get('/'.$segments['posts'].'/{id}/{slug}', [PostController::class, 'show'])->name('posts.show');
 // Only authenticated users can post comments.
-Route::post('/'.$segments['posts'].'/{id}/{slug}/comments', [PostController::class, 'saveComment'])->name('posts.comment')->middleware('auth');
-Route::put('/'.$segments['posts'].'/comments/{comment}', [PostController::class, 'updateComment'])->name('posts.comment.update')->middleware('auth');
-Route::delete('/'.$segments['posts'].'/comments/{comment}', [PostController::class, 'deleteComment'])->name('posts.comment.delete')->middleware('auth');
+Route::post('/'.$segments['posts'].'/{id}/{slug}/comments', [PostController::class, 'saveComment'])->name('posts.comments')->middleware('auth');
+Route::put('/'.$segments['posts'].'/comments/{comment}', [PostController::class, 'updateComment'])->name('posts.comments.update')->middleware('auth');
+Route::delete('/'.$segments['posts'].'/comments/{comment}', [PostController::class, 'deleteComment'])->name('posts.comments.delete')->middleware('auth');
 Route::get('/'.$segments['posts'].'/'.$segments['categories'].'/{id}/{slug}', [PostCategoryController::class, 'index'])->name('posts.categories');
 
 $segments = Setting::getSegments('Discussion');
 Route::get('/'.$segments['discussions'].'/register/{discussion}', [DiscussionController::class, 'register'])->name('discussions.register');
 Route::get('/'.$segments['discussions'].'/unregister/{discussion}', [DiscussionController::class, 'unregister'])->name('discussions.unregister');
 Route::get('/'.$segments['discussions'].'/cancel/{discussion?}', [DiscussionController::class, 'cancel'])->name('discussions.cancel');
+// Only authenticated users can post comments.
+Route::post('/'.$segments['discussions'].'/{id}/{slug}/comments', [DiscussionController::class, 'saveComment'])->name('discussions.comments')->middleware('auth');
+Route::put('/'.$segments['discussions'].'/comments/{comment}', [DiscussionController::class, 'updateComment'])->name('discussions.comments.update')->middleware('auth');
+Route::delete('/'.$segments['discussions'].'/comments/{comment}', [DiscussionController::class, 'deleteComment'])->name('discussions.comments.delete')->middleware('auth');
 Route::resource($segments['discussions'], DiscussionController::class)->except(['show']);
 Route::get('/'.$segments['discussions'].'/{id}/{slug}', [DiscussionController::class, 'show'])->name('discussions.show');
 Route::get('/'.$segments['discussions'].'/'.$segments['categories'].'/{id}/{slug}', [DiscussionCategoryController::class, 'index'])->name('discussions.categories');

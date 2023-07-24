@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Discussion\Category;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\WaitingList;
+use App\Models\Discussion\Comment;
 use App\Models\Setting;
 use App\Models\User\Group;
 use App\Traits\AccessLevel;
@@ -77,6 +78,17 @@ class Discussion extends Model
     public function groups()
     {
         return $this->belongsToMany(Group::class);
+    }
+
+    /**
+     * The comments that belong to the discussion.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)
+                    ->leftJoin('users', 'users.id', '=', 'discussion_comments.owned_by')
+                    ->select('discussion_comments.*', 'users.name AS author')
+                    ->orderBy('discussion_comments.created_at', 'desc');
     }
 
     /**

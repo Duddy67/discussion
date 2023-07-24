@@ -86,6 +86,7 @@ return [
 	'subject_desc' => 'Subject descendant',
 	'discussion_date_asc' => 'Discussion date ascendant',
 	'discussion_date_desc' => 'Discussion date descendant',
+	'comments' => 'Comments',
     ],
     'category' => [
 	'create_category' => 'Create a category',
