@@ -1,4 +1,4 @@
-    <h1 class="h2"><a href="{{ url($discussion->getUrl()) }}">{{ $discussion->subject}}</a></h1>
+    <h1 class="h2">{{ $discussion->subject}}</h1>
 
     <div>
         @date ($discussion->discussion_date->tz($timezone))
@@ -14,7 +14,7 @@
         Platform: {{ __('labels.discussion.'.$discussion->platform) }}
     </div>
 
-    @if ($discussion->getTimeBeforeDiscussionInMinutes() < $discussion::DELAY_BEFORE_SHOWING_LINK)
+    @if ($discussion->isUserRegistered() && $discussion->getTimeBeforeDiscussionInMinutes() < $discussion::DELAY_BEFORE_SHOWING_LINK)
         <div>
             {{ $discussion->discussion_link }}
         </div>

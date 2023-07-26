@@ -13,10 +13,10 @@
 
     <div class="fixed me-2 px-6 py-4 sm:block">
         @php $date = (isset($daypicker)) ? $daypicker : 0; @endphp
-        <form method="post" action="{{ route('discussions.index') }}" id="dayPicker">
+        <form method="post" action="{{ route('discussions.index') }}" id="day_pickerForm">
             @csrf
             @method('get')
-            <input id="day_picker" type="text" class="form-control daypicker" name="day_picker" data-date="{{ $date }}">
+            <input id="day_picker" type="text" class="form-control daypicker" name="day_picker" data-date="{{ $date }}" data-format="D MMM YYYY">
             <input type="hidden" id="_day_picker" name="_day_picker" value="">
         </form>
     </div>

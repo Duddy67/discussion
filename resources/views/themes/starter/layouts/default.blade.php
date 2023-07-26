@@ -51,10 +51,11 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script type="text/javascript" src="{{ asset('/js/parent.menu.links.clickable.js') }}"></script>
-    <!-- Adds possible extra js scripts pushed by pages and partials. -->
+    <!-- The day pickers used to show discussions by day and in the edit discussion form. -->
     <script type="text/javascript" src="{{ asset('/vendor/adminlte/plugins/moment/moment.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/vendor/adminlte/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/daypicker.js') }}"></script>
+    <!-- Adds possible extra js scripts pushed by pages and partials. -->
     @stack ('scripts')
 
     @include('themes.starter.partials.cookie-info.index')

@@ -33,8 +33,9 @@
   {
     "label": "labels.discussion.discussion_date",
     "type": "date",
+    "class": "daypicker",
     "name": "discussion_date",
-    "dataset": {"date":"0", "time":"0"},
+    "dataset": {"date":"0", "time":"0", "format":"D MMM YYYY HH:mm"},
     "id": "discussion_date"
   },
   {
