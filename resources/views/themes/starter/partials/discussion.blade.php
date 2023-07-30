@@ -4,7 +4,7 @@
     @if (isset($daypicker))
         <td><span class="badge bg-secondary">{{ $discussion->category->name }}</span></td>
     @endif
-    <td>{{ \Carbon\Carbon::parse($discussion->discussion_date, $timezone)->isoFormat($format) }}</td>
+    <td>{{ \Carbon\Carbon::parse($discussion->discussion_date, $page['timezone'])->isoFormat($format) }}</td>
     <td>{{ $discussion->organizer }}</td>
     <td>{{ $discussion->getAttendees()->count() }}/{{ $discussion->max_attendees }}</td>
 </tr>

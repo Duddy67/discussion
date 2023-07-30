@@ -17,7 +17,7 @@
 	</div>
     </div>
 @endif
-
+@php var_dump($settings) @endphp
 @if (!count($discussions))
     <div>No discussion</div>
 @else

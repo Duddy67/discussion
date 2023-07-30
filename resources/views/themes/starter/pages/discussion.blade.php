@@ -1,7 +1,7 @@
     <h1 class="h2">{{ $discussion->subject}}</h1>
 
     <div>
-        @date ($discussion->discussion_date->tz($timezone))
+        @date ($discussion->discussion_date->tz($page['timezone']))
     </div>
 
     @include('themes.starter.partials.discussion.time')
@@ -22,7 +22,7 @@
 
     @if ($daypicker)
         <div>
-            <a href="{{ url('/'.$segments['discussions']) }}{{ '?_day_picker='.$daypicker }}" class="btn btn-success btn-sm active" role="button" aria-pressed="true">{{ \Carbon\Carbon::parse($daypicker, $timezone)->isoFormat('MMM Do YY') }}</a>
+            <a href="{{ url('/'.$segments['discussions']) }}{{ '?_day_picker='.$daypicker }}" class="btn btn-success btn-sm active" role="button" aria-pressed="true">{{ \Carbon\Carbon::parse($daypicker, $page['timezone'])->isoFormat('MMM Do YY') }}</a>
         </div>
     @endif
 

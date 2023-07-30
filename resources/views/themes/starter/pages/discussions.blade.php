@@ -1,4 +1,4 @@
-<div><h5>{{ \Carbon\Carbon::parse($daypicker, $timezone)->isoFormat('Do MMM YY') }}</h5></div>
+<div><h5>{{ \Carbon\Carbon::parse($daypicker, $page['timezone'])->isoFormat('Do MMM YY') }}</h5></div>
 
 @if (!count($discussions))
     <div>No discussion</div>
