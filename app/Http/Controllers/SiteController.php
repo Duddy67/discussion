@@ -7,7 +7,6 @@ use App\Models\Discussion\Category;
 use App\Models\Discussion\Setting as DiscussionSetting;
 //use App\Models\Post\Category as PostCategory;
 //use App\Models\Post\Setting as PostSetting;
-//use App\Models\Menu;
 use App\Models\Setting;
 
 class SiteController extends Controller
@@ -18,36 +17,31 @@ class SiteController extends Controller
         $page = Setting::getPage($name);
         $discussions = null;
         $settings = $metaData = [];
-        //$menu = Menu::getMenu('main-menu');
-        //$menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
-        //$theme = Setting::getValue('website', 'theme', 'starter');
         $query = $request->query();
-        //$timezone = Setting::getValue('app', 'timezone');
 
         if ($category = Category::where('slug', $page)->first()) {
-
+            $category->settings = $category->getSettings();
+            $metaData = $category->meta_data;
             $discussions = ($page['name'] == 'home') ? $category->getAll() : $category->getAllDiscussions($request);
 
-            $globalSettings = DiscussionSetting::getDataByGroup('categories');
-            $settings = DiscussionSetting::getItemSettings($category, 'categories');
+            if (count($discussions)) {
+                // Use the first discussion as model to get the global discussion settings.
+                $globalPostSettings = Setting::getDataByGroup('discussions', $discussions[0]);
 
-            /*foreach ($category->settings as $key => $value) {
-                if ($value == 'global_setting') {
-                    $settings[$key] = $globalSettings[$key];
-                }
-                else {
-                    $settings[$key] = $category->settings[$key];
-                }
-            }*/
+                // Set the setting values manually to improve performance a bit.
+                /*foreach ($discussions as $discussion) {
+                    // N.B: Don't set the values directly through the object. Use an array to
+                    // prevent the "Indirect modification of overloaded property has no effect" error.
+                    $settings = [];
 
-            $category->global_settings = $globalSettings;
-            $metaData = $category->meta_data;
+                    foreach ($discussion->settings as $key => $value) {
+                        // Set the item setting values against the item global setting.
+                        $settings[$key] = ($value == 'global_setting') ? $globalPostSettings[$key] : $discussion->settings[$key];
+                    }
 
-            /*$globalSettings = PostSetting::getDataByGroup('posts');
-
-            foreach ($discussions as $discussion) {
-                $post->global_settings = $globalSettings;
-            }*/
+                    $discussion->settings = $settings;
+                }*/
+            }
         }
         elseif ($page['name'] == 'home' || file_exists(resource_path().'/views/themes/'.$page['theme'].'/pages/'.$page['name'].'.blade.php')) {
             return view('themes.'.$page['theme'].'.index', compact('page', 'query'));
@@ -59,17 +53,13 @@ class SiteController extends Controller
 
         $segments = Setting::getSegments('Discussion');
 
-        return view('themes.'.$page['theme'].'.index', compact('page', 'category', 'settings', 'discussions', 'segments', 'metaData', 'query'));
+        return view('themes.'.$page['theme'].'.index', compact('page', 'category', 'discussions', 'segments', 'metaData', 'query'));
     }
 
 
     public function show(Request $request)
     {
         $page = Setting::getPage($request->segment(1));
-        //$menu = Menu::getMenu('main-menu');
-        //$menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
-        //$theme = Setting::getValue('website', 'theme', 'starter');
-        //$timezone = Setting::getValue('app', 'timezone');
 
         // First make sure the category exists.
 	if (!$category = Category::where('slug', $page['name'])->first()) {

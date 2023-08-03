@@ -204,6 +204,11 @@ class Discussion extends Model
         }
     }
 
+    public function getSettings()
+    {
+        return Setting::getItemSettings($this, 'discussions');
+    }
+
     public function getTimeBeforeDiscussion(): ?\stdClass
     {
         if (!$dates = $this->getDateTimes()) {

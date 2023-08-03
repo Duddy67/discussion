@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Discussion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Discussion\Category;
-use App\Models\Discussion\Setting as DiscussionSetting;
-//use App\Models\Menu;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,9 +14,6 @@ class CategoryController extends Controller
     public function index(Request $request, $id, $slug)
     {
         $page = Setting::getPage('discussion.category');
-        //$theme = Setting::getValue('website', 'theme', 'starter');
-        //$menu = Menu::getMenu('main-menu');
-        //$menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
 
 	if (!$category = Category::where('id', $id)->first()) {
             $page['name'] = '404';
@@ -30,14 +25,32 @@ class CategoryController extends Controller
             return view('themes.'.$page['theme'].'.index', compact('page'));
 	}
 
-        $category->global_settings = DiscussionSetting::getDataByGroup('categories');
-	$settings = $category->getSettings();
+        $category->settings = $category->getSettings();
 	$discussions = $category->getDiscussions($request);
+
+        if (count($discussions)) {
+            // Use the first discussion as model to get the global discussion settings.
+            $globalPostSettings = Setting::getDataByGroup('discussions', $discussions[0]);
+
+            // Set the setting values manually to improve performance a bit.
+            /*foreach ($discussions as $discussion) {
+                // N.B: Don't set the values directly through the object. Use an array to
+                // prevent the "Indirect modification of overloaded property has no effect" error.
+                $settings = [];
+
+                foreach ($discussion->settings as $key => $value) {
+                    // Set the item setting values against the item global setting.
+                    $settings[$key] = ($value == 'global_setting') ? $globalPostSettings[$key] : $discussion->settings[$key];
+                }
+
+                $discussion->settings = $settings;
+            }*/
+        }
+
         $segments = Setting::getSegments('Discussion');
         $metaData = $category->meta_data;
-        //$timezone = Setting::getValue('app', 'timezone');
 	$query = array_merge($request->query(), ['id' => $id, 'slug' => $slug]);
 
-        return view('themes.'.$page['theme'].'.index', compact('page', 'category', 'segments', 'settings', 'discussions', 'metaData', 'query'));
+        return view('themes.'.$page['theme'].'.index', compact('page', 'category', 'segments', 'discussions', 'metaData', 'query'));
     }
 }

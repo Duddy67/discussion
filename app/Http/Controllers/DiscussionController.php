@@ -9,7 +9,6 @@ use App\Models\Discussion\Category;
 use App\Models\Discussion\Comment;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\Setting as DiscussionSetting;
-//use App\Models\Menu;
 use App\Models\Setting;
 use App\Models\User;
 use App\Models\User\Group;
@@ -65,11 +64,7 @@ class DiscussionController extends Controller
                         ->orderBy('discussion_date', 'asc')->get();
 
         $page = Setting::getPage('discussions');
-        //$menu = Menu::getMenu('main-menu');
-        //$theme = Setting::getValue('website', 'theme', 'starter');
         $query = $request->query();
-        //$timezone = Setting::getValue('app', 'timezone');
-        //$page = 'discussions';
 
         return view('themes.'.$page['theme'].'.index', compact('page', 'discussions', 'daypicker', 'query'));
     }
@@ -82,9 +77,6 @@ class DiscussionController extends Controller
 			->where('discussions.id', $id)->first();
 
         $page = Setting::getPage('discussion');
-        //$menu = Menu::getMenu('main-menu');
-        //$menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
-        //$theme = Setting::getValue('website', 'theme', 'starter');
 
         if (!$discussion) {
             $page['name'] = '404';
@@ -96,13 +88,10 @@ class DiscussionController extends Controller
             return view('themes.'.$page['theme'].'.index', compact('page'));
 	}
 
-        //$page = 'discussion';
-
-        //$discussion->global_settings = DiscussionSetting::getDataByGroup('discussions');
 	//$settings = $discussion->getSettings();
         //$discussion->time_before_discussion = $discussion->getTimeBeforeDiscussion();
-        //$timezone = Setting::getValue('app', 'timezone');
         //$metaData = $discussion->meta_data;
+        //$discussion->settings = $discussion->getSettings();
         $segments = Setting::getSegments('Discussion');
         $daypicker = ($request->has('_day_picker')) ? $request->input('_day_picker') : 0;
 	$query = array_merge($request->query(), ['id' => $id, 'slug' => $slug]);
@@ -113,13 +102,8 @@ class DiscussionController extends Controller
     public function create(Request $request)
     {
         $page = Setting::getPage('discussion.form');
-        //$menu = Menu::getMenu('main-menu');
-        //$menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
-        //$theme = Setting::getValue('website', 'theme', 'starter');
-        //$timezone = Setting::getValue('app', 'timezone');
         $except = (auth()->user()->canAccessAdmin()) ? ['updated_by', 'created_at', 'owner_name', 'updated_at'] : ['updated_by', 'created_at', 'updated_at', 'owned_by', 'owner_name', 'access_level'];
         $fields = $this->getFields($except);
-        //$page = 'discussion.form';
 	$query = $request->query();
 
         return view('themes.'.$page['theme'].'.index', compact('page', 'fields', 'query'));
@@ -161,10 +145,6 @@ class DiscussionController extends Controller
         $discussion->checkOut();
 
         $page = Setting::getPage('discussion.form');
-        //$menu = Menu::getMenu('main-menu');
-        //$menu->allow_registering = Setting::getValue('website', 'allow_registering', 0);
-        //$theme = Setting::getValue('website', 'theme', 'starter');
-        //$timezone = Setting::getValue('app', 'timezone');
         // Gather the needed data to build the form.
         //$except = (auth()->user()->getRoleLevel() > $discussion->getOwnerRoleLevel() || $discussion->owned_by == auth()->user()->id) ? ['owner_name'] : ['owned_by'];
         $except = (auth()->user()->canAccessAdmin()) ? [] : ['updated_by', 'created_at', 'updated_at', 'owned_by', 'owner_name', 'access_level'];

@@ -485,9 +485,9 @@ class DiscussionController extends Controller
      * @param  \App\Models\Discussion $discussion
      * @return void
      */
-    /*private function setFieldValues(array &$fields, Discussion $discussion = null)
+    /*private function setFieldValues(array &$fields, Discussion $discussion)
     {
-        $globalSettings = DiscussionSetting::getDataByGroup('discussions');
+        $globalSettings = Setting::getDataByGroup('discussions', $discussion);
         foreach ($globalSettings as $key => $value) {
             if (str_starts_with($key, 'alias_extra_field_')) {
                 foreach ($fields as $field) {

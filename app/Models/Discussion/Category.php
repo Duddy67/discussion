@@ -280,7 +280,7 @@ class Category extends Model
 
     public function getSettings()
     {
-        return DiscussionSetting::getItemSettings($this, 'categories');
+        return Setting::getItemSettings($this, 'categories');
     }
 
     public function getDiscussionOrderingOptions()

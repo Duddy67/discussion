@@ -73,7 +73,7 @@ class CategoryController extends Controller
         // Gather the needed data to build the form.
 
         $fields = $this->getFields(['updated_by', 'created_at', 'updated_at', 'owner_name']);
-        $this->setFieldValues($fields);
+        $this->setFieldValues($fields, $this->model);
         $actions = $this->getActions('form', ['destroy']);
         $query = $request->query();
 
@@ -528,11 +528,9 @@ class CategoryController extends Controller
      * @param  \App\Models\Discussion\Category $category
      * @return void
      */
-    private function setFieldValues(&$fields, Category $category = null)
+    private function setFieldValues(&$fields, Category $category)
     {
-        if ($category === null) {
-            return;
-        }
+        $globalSettings = Setting::getDataByGroup('categories', $category);
 
         foreach ($fields as $field) {
             if ($field->name == 'parent_id') {

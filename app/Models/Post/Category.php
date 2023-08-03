@@ -39,9 +39,9 @@ class Category extends Model
         'status',
         'owned_by',
         'description',
+        'alt_img',
         'access_level',
         'parent_id',
-        'alt_img',
         'extra_fields',
         'meta_data',
         'settings',
@@ -131,7 +131,8 @@ class Category extends Model
             return Category::where('name', 'like', '%'.$search.'%')->get();
         }
         else {
-            return Category::select('post_categories.*', 'users.name as owner_name')->leftJoin('users', 'post_categories.owned_by', '=', 'users.id')->defaultOrder()->get()->toTree();
+            return Category::select('post_categories.*', 'users.name as owner_name')
+                             ->leftJoin('users', 'post_categories.owned_by', '=', 'users.id')->defaultOrder()->get()->toTree();
         }
     }
 
@@ -261,7 +262,7 @@ class Category extends Model
 
     public function getSettings()
     {
-        return PostSetting::getItemSettings($this, 'categories');
+        return Setting::getItemSettings($this, 'categories');
     }
 
     public function getPostOrderingOptions()

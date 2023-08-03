@@ -84,7 +84,7 @@ class PostController extends Controller
         // Gather the needed data to build the form.
 
         $fields = $this->getFields(['updated_by', 'created_at', 'updated_at', 'owner_name']);
-        $this->setFieldValues($fields);
+        $this->setFieldValues($fields, $this->model);
         $actions = $this->getActions('form', ['destroy']);
         $query = $request->query();
 
@@ -136,8 +136,7 @@ class PostController extends Controller
      */
     public function cancel(Request $request, Post $post = null)
     {
-        // Make sure the current user is the user for whom the record is checked out.
-        if ($post && $post->checked_out == auth()->user()->id) {
+        if ($post) {
             $post->safeCheckIn();
         }
 
@@ -278,7 +277,6 @@ class PostController extends Controller
         LayoutItem::storeItems($post);
         // Prioritize layout items over regular content when storing raw content.
         $post->raw_content = ($post->layoutItems()->exists()) ? $post->getLayoutRawContent() : strip_tags($request->input('content'));
-        $post->updated_by = auth()->user()->id;
 
         $post->save();
 
@@ -609,9 +607,9 @@ class PostController extends Controller
      * @param  \App\Models\Post $post
      * @return void
      */
-    private function setFieldValues(array &$fields, Post $post = null)
+    private function setFieldValues(array &$fields, Post $post)
     {
-        $globalSettings = PostSetting::getDataByGroup('posts');
+        $globalSettings = Setting::getDataByGroup('posts', $post);
         foreach ($globalSettings as $key => $value) {
             if (str_starts_with($key, 'alias_extra_field_')) {
                 foreach ($fields as $field) {
