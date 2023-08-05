@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Menu;
 use App\Traits\Node;
 use App\Models\User\Group;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use App\Traits\CheckInCheckOut;
 use Request;
 
@@ -109,7 +109,7 @@ class Item extends Model
         // Get the parent menu code.
         $code = Request::route()->parameter('code');
 
-        $nodes = Item::whereIn('menu_code', ['root', $code])->get()->toTree();
+        $nodes = Item::whereIn('menu_code', ['root', $code])->defaultOrder()->get()->toTree();
         // Defines the state of the current instance.
         $isNew = ($this->id) ? false : true;
         $options = [];

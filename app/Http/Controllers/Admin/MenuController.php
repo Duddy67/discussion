@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\User\Group;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use App\Traits\Form;
 use App\Traits\CheckInCheckOut;
 use App\Http\Requests\Menu\StoreRequest;
@@ -126,7 +126,7 @@ class MenuController extends Controller
      */
     public function cancel(Request $request, Menu $menu = null)
     {
-        if ($menu && $menu->checked_out == auth()->user()->id) {
+        if ($menu) {
             $menu->safeCheckIn();
         }
 
@@ -212,7 +212,6 @@ class MenuController extends Controller
             $menu->groups()->attach($request->input('groups'));
         }
 
-        $menu->updated_by = auth()->user()->id;
         $menu->save();
 
         $request->session()->flash('success', __('messages.menu.create_success'));

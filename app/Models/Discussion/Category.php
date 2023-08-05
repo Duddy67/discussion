@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Discussion;
 use App\Models\Cms\Document;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use App\Models\User\Group;
 use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Traits\Node;

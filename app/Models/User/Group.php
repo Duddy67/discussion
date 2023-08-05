@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Post;
-use App\Models\Post\Category as PostCategory;
-use App\Models\Discussion\Category as DiscussionCategory;
+use App\Models\Post\Category;
 use App\Models\Menu;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use App\Traits\AccessLevel;
 use App\Traits\CheckInCheckOut;
 
@@ -47,7 +46,7 @@ class Group extends Model
      *
      * @var array
      */
-    protected $touches = ['posts', 'users', 'postCategories', 'discussionCategories', 'menus'];
+    protected $touches = ['posts', 'users', 'categories', 'menus'];
 
     /**
      * The users that belong to the group.
@@ -66,19 +65,11 @@ class Group extends Model
     }
 
     /**
-     * The post categories that belong to the group.
+     * The categories that belong to the group.
      */
-    public function postCategories()
+    public function categories()
     {
-        return $this->belongsToMany(PostCategory::class, 'post_category_group');
-    }
-
-    /**
-     * The discussion categories that belong to the group.
-     */
-    public function discussionCategories()
-    {
-        return $this->belongsToMany(DiscussionCategory::class, 'discussion_category_group');
+        return $this->belongsToMany(Category::class, 'post_category_group');
     }
 
     /**

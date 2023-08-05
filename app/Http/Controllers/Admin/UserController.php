@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Models\User\Group;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\Form;
 use App\Traits\CheckInCheckOut;
-use App\Models\Email;
+use App\Models\Cms\Email;
 use App\Models\Cms\Document;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
@@ -124,7 +124,7 @@ class UserController extends Controller
      */
     public function cancel(Request $request, User $user = null)
     {
-        if ($user && $user->checked_out == auth()->user()->id) {
+        if ($user) {
             $user->safeCheckIn();
         }
 
@@ -146,7 +146,6 @@ class UserController extends Controller
         }
 
         $user->name = $request->input('name');
-        $user->nickname = $request->input('nickname');
         $user->email = $request->input('email');
         $user->updated_by = auth()->user()->id;
 
@@ -205,12 +204,10 @@ class UserController extends Controller
     {
         $user = User::create([
             'name' => $request->input('name'),
-            'nickname' => $request->input('nickname'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
 
-        $user->updated_by = auth()->user()->id;
         $user->save();
 
         $user->assignRole($request->input('role'));

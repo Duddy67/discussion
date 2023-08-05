@@ -9,7 +9,7 @@ use App\Models\Discussion;
 use App\Models\Discussion\Category;
 use App\Models\User;
 use App\Models\User\Group;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use App\Traits\Form;
 use App\Traits\CheckInCheckOut;
 use Carbon\Carbon;

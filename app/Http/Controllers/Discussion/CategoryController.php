@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Discussion;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Discussion\Category;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use Illuminate\Support\Facades\Auth;
 
 

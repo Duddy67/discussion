@@ -10,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Models\User\Role;
 use App\Models\User\Group;
 use App\Models\Cms\Document;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use App\Traits\CheckInCheckOut;
 use Illuminate\Support\Str;
 
@@ -26,7 +26,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'nickname',
         'email',
         'password',
         'last_logged_in_at',
@@ -109,14 +108,6 @@ class User extends Authenticatable
     public function photo()
     {
         return $this->morphOne(Document::class, 'documentable')->where('field', 'photo');
-    }
-
-    /**
-     * The registrations that belong to the user.
-     */
-    public function registrations()
-    {
-        return $this->hasMany(Registration::class);
     }
 
     /**

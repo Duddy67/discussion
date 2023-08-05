@@ -9,7 +9,7 @@ use App\Models\Discussion\Category;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\WaitingList;
 use App\Models\Discussion\Comment;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 use App\Models\User\Group;
 use App\Traits\AccessLevel;
 use App\Traits\CheckInCheckOut;

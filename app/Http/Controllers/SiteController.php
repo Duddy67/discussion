@@ -7,7 +7,7 @@ use App\Models\Discussion\Category;
 use App\Models\Discussion\Setting as DiscussionSetting;
 //use App\Models\Post\Category as PostCategory;
 //use App\Models\Post\Setting as PostSetting;
-use App\Models\Setting;
+use App\Models\Cms\Setting;
 
 class SiteController extends Controller
 {
