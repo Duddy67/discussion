@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Cms;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ class SettingController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('admin.settings');
+        $this->middleware('admin.cms.settings');
         $this->model = new Setting;
     }
 
@@ -48,7 +48,7 @@ class SettingController extends Controller
         $query = $request->query();
         $data = Setting::getData();
 
-        return view('admin.setting.form', compact('fields', 'actions', 'data', 'query'));
+        return view('admin.cms.setting.form', compact('fields', 'actions', 'data', 'query'));
     }
 
     /**

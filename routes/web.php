@@ -89,7 +89,7 @@ Route::prefix('admin')->group(function () {
         Route::group([], __DIR__.'/admin/posts.php');
         Route::group([], __DIR__.'/admin/discussions.php');
         Route::group([], __DIR__.'/admin/menus.php');
-        Route::group([], __DIR__.'/admin/settings.php');
+        Route::group([], __DIR__.'/admin/cms.php');
     });
 });
 

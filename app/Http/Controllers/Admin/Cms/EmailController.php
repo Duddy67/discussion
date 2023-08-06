@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Cms;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,8 +10,8 @@ use App\Models\User;
 use App\Models\Cms\Setting;
 use App\Traits\Form;
 use App\Traits\CheckInCheckOut;
-use App\Http\Requests\Email\StoreRequest;
-use App\Http\Requests\Email\UpdateRequest;
+use App\Http\Requests\Cms\Email\StoreRequest;
+use App\Http\Requests\Cms\Email\UpdateRequest;
 
 
 class EmailController extends Controller
@@ -37,7 +37,7 @@ class EmailController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('admin.emails');
+        $this->middleware('admin.cms.emails');
 	$this->model = new Email;
     }
 
@@ -56,10 +56,10 @@ class EmailController extends Controller
 	$items = $this->model->getItems($request);
 	$rows = $this->getRows($columns, $items);
 	$query = $request->query();
-	$url = ['route' => 'admin.emails', 'item_name' => 'email', 'query' => $query];
+	$url = ['route' => 'admin.cms.emails', 'item_name' => 'email', 'query' => $query];
         $message = __('messages.email.test_email_sending', ['email' => auth()->user()->email]);
 
-        return view('admin.email.list', compact('items', 'columns', 'rows', 'actions', 'filters', 'url', 'message', 'query'));
+        return view('admin.cms.email.list', compact('items', 'columns', 'rows', 'actions', 'filters', 'url', 'message', 'query'));
     }
 
     /**
@@ -75,7 +75,7 @@ class EmailController extends Controller
         $actions = $this->getActions('form', ['destroy']);
 	$query = $request->query();
 
-        return view('admin.email.form', compact('fields', 'actions', 'query'));
+        return view('admin.cms.email.form', compact('fields', 'actions', 'query'));
     }
 
     /**
@@ -93,7 +93,7 @@ class EmailController extends Controller
                                       ->findOrFail($id);
 
 	if ($email->checked_out && $email->checked_out != auth()->user()->id && !$email->isUserSessionTimedOut()) {
-	    return redirect()->route('admin.emails.index')->with('error',  __('messages.generic.checked_out'));
+	    return redirect()->route('admin.cms.emails.index')->with('error',  __('messages.generic.checked_out'));
 	}
 
 	$email->checkOut();
@@ -107,7 +107,7 @@ class EmailController extends Controller
 	// Add the id parameter to the query.
 	$query = array_merge($request->query(), ['email' => $id]);
 
-        return view('admin.email.form', compact('email', 'fields', 'actions', 'query'));
+        return view('admin.cms.email.form', compact('email', 'fields', 'actions', 'query'));
     }
 
     /**
@@ -123,7 +123,7 @@ class EmailController extends Controller
 	    $email->safeCheckIn();
 	}
 
-	return redirect()->route('admin.emails.index', $request->query());
+	return redirect()->route('admin.cms.emails.index', $request->query());
     }
 
     /**
@@ -136,13 +136,13 @@ class EmailController extends Controller
     {
         $messages = CheckInCheckOut::checkInMultiple($request->input('ids'), '\\App\\Models\\Email');
 
-	return redirect()->route('admin.emails.index', $request->query())->with($messages);
+	return redirect()->route('admin.cms.emails.index', $request->query())->with($messages);
     }
 
     /**
      * Update the specified email. (AJAX)
      *
-     * @param  \App\Http\Requests\Email\UpdateRequest  $request
+     * @param  \App\Http\Requests\Cms\Email\UpdateRequest  $request
      * @param  \App\Models\Cms\Email  $email
      * @return JSON
      */
@@ -164,7 +164,7 @@ class EmailController extends Controller
             $email->safeCheckIn();
             // Store the message to be displayed on the list view after the redirect.
             $request->session()->flash('success', __('messages.email.update_success'));
-            return response()->json(['redirect' => route('admin.emails.index', $request->query())]);
+            return response()->json(['redirect' => route('admin.cms.emails.index', $request->query())]);
         }
 
         $refresh = ['updated_at' => Setting::getFormattedDate($email->updated_at), 'updated_by' => auth()->user()->name];
@@ -175,7 +175,7 @@ class EmailController extends Controller
     /**
      * Store a new email.
      *
-     * @param  \App\Http\Requests\Email\StoreRequest  $request
+     * @param  \App\Http\Requests\Cms\Email\StoreRequest  $request
      * @return JSON
      */
     public function store(StoreRequest $request)
@@ -194,11 +194,11 @@ class EmailController extends Controller
         $request->session()->flash('success', __('messages.email.create_success'));
 
         if ($request->input('_close', null)) {
-            return response()->json(['redirect' => route('admin.emails.index', $request->query())]);
+            return response()->json(['redirect' => route('admin.cms.emails.index', $request->query())]);
 	}
 
         // Redirect to the edit form.
-        return response()->json(['redirect' => route('admin.emails.edit', array_merge($request->query(), ['email' => $email->id]))]);
+        return response()->json(['redirect' => route('admin.cms.emails.edit', array_merge($request->query(), ['email' => $email->id]))]);
     }
 
     /**
@@ -213,7 +213,7 @@ class EmailController extends Controller
 	$code = $email->code;
 	$email->delete();
 
-	return redirect()->route('admin.emails.index', $request->query())->with('success', __('messages.email.delete_success', ['name' => $code]));
+	return redirect()->route('admin.cms.emails.index', $request->query())->with('success', __('messages.email.delete_success', ['name' => $code]));
     }
 
     /**
@@ -237,16 +237,16 @@ class EmailController extends Controller
 	    $messages['success'] = __('messages.generic.mass_delete_success', ['number' => $deleted]);
 	}
 
-	return redirect()->route('admin.emails.index', $request->query())->with($messages);
+	return redirect()->route('admin.cms.emails.index', $request->query())->with($messages);
     }
 
     public function test()
     {
         if (Email::sendTestEmail()) {
-            return redirect()->route('admin.emails.index')->with('success', __('messages.email.test_email_sending_ok'));
+            return redirect()->route('admin.cms.emails.index')->with('success', __('messages.email.test_email_sending_ok'));
         }
 
-        return redirect()->route('admin.emails.index')->with('error', __('messages.email.test_email_sending_error'));
+        return redirect()->route('admin.cms.emails.index')->with('error', __('messages.email.test_email_sending_error'));
     }
 
     /*
