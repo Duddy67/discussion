@@ -22,12 +22,7 @@ class DiscussionController extends Controller
     use Form;
 
     /*
-     * Instance of the model.
-     */
-    protected $model;
-
-    /*
-     * The item to edit in the form.
+     * Instance of the Discussion model, (used in the Form trait).
      */
     protected $item = null;
 
@@ -40,7 +35,7 @@ class DiscussionController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('admin.discussions');
-        $this->model = new Discussion;
+        $this->item = new Discussion;
     }
 
     /**
@@ -55,7 +50,7 @@ class DiscussionController extends Controller
         $columns = $this->getColumns();
         $actions = $this->getActions('list');
         $filters = $this->getFilters($request);
-        $items = $this->model->getItems($request);
+        $items = Discussion::getDiscussions($request);
         $rows = $this->getRows($columns, $items, ['category_id', 'attendees']);
         $this->setRowValues($rows, $columns, $items);
         $query = $request->query();

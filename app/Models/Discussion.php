@@ -14,8 +14,8 @@ use App\Models\User\Group;
 use App\Traits\AccessLevel;
 use App\Traits\CheckInCheckOut;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Request;
 
 class Discussion extends Model
 {
@@ -113,7 +113,7 @@ class Discussion extends Model
     /*
      * Gets the discussions according to the filter settings.
      */
-    public function getItems($request)
+    public static function getDiscussions(Request $request)
     {
         $perPage = $request->input('per_page', Setting::getValue('pagination', 'per_page'));
         $search = $request->input('search', null);
