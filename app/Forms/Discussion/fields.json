@@ -24,7 +24,7 @@
     "label": "labels.generic.category",
     "type": "select",
     "name": "category_id",
-    "function": "categories",
+    "function": "category",
     "extra": ["title_as_id"],
     "id": "category_id",
     "blank": "labels.generic.select_option",
@@ -50,14 +50,15 @@
     "label": "labels.discussion.is_private",
     "type": "select",
     "name": "is_private",
+    "function": "yes_no",
     "id": "is_private",
-    "extra": ["yes_no"],
     "options": [] 
   },
   {
     "label": "labels.user.groups",
     "type": "select",
     "name": "groups",
+    "function": "group",
     "extra": ["multiple","title_as_id"],
     "id": "groups",
     "class": "_locked",
@@ -68,16 +69,16 @@
     "label": "labels.discussion.registering_alert",
     "type": "select",
     "name": "registering_alert",
+    "function": "yes_no",
     "id": "registering_alert",
-    "extra": ["yes_no"],
     "options": [] 
   },
   {
     "label": "labels.discussion.comment_alert",
     "type": "select",
     "name": "comment_alert",
+    "function": "yes_no",
     "id": "comment_alert",
-    "extra": ["yes_no"],
     "options": [] 
   },
   {

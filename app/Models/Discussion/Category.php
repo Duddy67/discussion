@@ -13,12 +13,13 @@ use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Traits\Node;
 use App\Traits\TreeAccessLevel;
 use App\Traits\CheckInCheckOut;
+use App\Traits\OptionList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class Category extends Model
 {
-    use HasFactory, Node, TreeAccessLevel, CheckInCheckOut;
+    use HasFactory, Node, TreeAccessLevel, CheckInCheckOut, OptionList;
 
     /**
      * The table associated with the model.

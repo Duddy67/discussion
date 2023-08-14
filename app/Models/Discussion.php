@@ -12,6 +12,7 @@ use App\Models\Discussion\Comment;
 use App\Models\Cms\Setting;
 use App\Models\User\Group;
 use App\Traits\AccessLevel;
+use App\Traits\OptionList;
 use App\Traits\CheckInCheckOut;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ use Illuminate\Support\Str;
 
 class Discussion extends Model
 {
-    use HasFactory, AccessLevel, CheckInCheckOut;
+    use HasFactory, AccessLevel, CheckInCheckOut, OptionList;
 
     /**
      * The attributes that are mass assignable.

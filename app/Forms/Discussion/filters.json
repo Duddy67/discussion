@@ -18,6 +18,7 @@
     "label": "labels.title.categories",
     "type": "select",
     "name": "categories",
+    "function": "category",
     "extra": ["multiple"],
     "id": "filters-categories",
     "options": [] 
@@ -26,6 +27,7 @@
     "label": "labels.user.groups",
     "type": "select",
     "name": "groups",
+    "function": "group",
     "extra": ["multiple"],
     "id": "filters-groups",
     "options": [] 
