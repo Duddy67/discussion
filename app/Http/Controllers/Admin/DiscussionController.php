@@ -194,8 +194,6 @@ class DiscussionController extends Controller
         $category = Category::find($request->input('category_id'));
         $category->discussions()->save($discussion);
 
-        $refresh = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
-
         if ($request->input('_close', null)) {
             $discussion->safeCheckIn();
             // Store the message to be displayed on the list view after the redirect.
@@ -203,7 +201,9 @@ class DiscussionController extends Controller
             return response()->json(['redirect' => route('admin.discussions.index', $request->query())]);
         }
 
-        return response()->json(['success' => __('messages.discussion.update_success'), 'refresh' => $refresh]);
+        $this->item = $discussion;
+
+        return response()->json(['success' => __('messages.discussion.update_success'), 'refresh' => $this->getFieldsToRefresh($request)]);
     }
 
     /**
