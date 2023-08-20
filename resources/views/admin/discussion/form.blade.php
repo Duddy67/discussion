@@ -11,13 +11,26 @@
             @method('put')
         @endif
 
+        @php
+                $dataTab = null;
+                $dateFormats = [];
+        @endphp
+
         @foreach ($fields as $field)
             @php $value = (isset($discussion)) ? old($field->name, $field->value) : old($field->name); @endphp
             <x-input :field="$field" :value="$value" />
         @endforeach
 
+        @if ($field->type == 'date' && isset($field->format))
+             @php $dateFormats[$field->name] = $field->format; @endphp
+        @endif
+
         <input type="hidden" id="cancelEdit" value="{{ route('admin.discussions.cancel', $query) }}">
         <input type="hidden" id="close" name="_close" value="0">
+
+        @foreach ($dateFormats as $key => $value)
+            <input type="hidden" name="_date_formats[{{ $key }}]" value="{{ $value }}">
+        @endforeach
     </form>
     <x-toolbar :items=$actions />
 

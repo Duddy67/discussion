@@ -1,17 +1,21 @@
     <h1 class="h2">{{ $discussion->subject}}</h1>
 
-    <div>
-        @date ($discussion->discussion_date->tz($page['timezone']))
-    </div>
-
-    @include('themes.starter.partials.discussion.time')
-
     <div class="content">
         {!! $discussion->description !!}
     </div>
 
-    <div>
-        Platform: {{ __('labels.discussion.'.$discussion->platform) }}
+    <div class="mb-2">
+        <img src="{{ $discussion->getMediaThumbnail() }}">
+    </div>
+
+    <div class="p-2 bg-light border mb-2">
+        <span class="fw-bold">Date: </span>@date ($discussion->discussion_date->tz($page['timezone']), 'd M Y H:i')
+    </div>
+
+    @include('themes.starter.partials.discussion.time')
+
+    <div class="p-2 bg-light border mb-2">
+        <span class="fw-bold">Platform: </span>{{ __('labels.discussion.'.$discussion->platform) }}
     </div>
 
     @if ($discussion->isUserRegistered() && $discussion->getTimeBeforeDiscussionInMinutes() < $discussion::DELAY_BEFORE_SHOWING_LINK)
@@ -21,17 +25,13 @@
     @endif
 
     @if ($daypicker)
-        <div>
-            <a href="{{ url('/'.$segments['discussions']) }}{{ '?_day_picker='.$daypicker }}" class="btn btn-success btn-sm active" role="button" aria-pressed="true">{{ \Carbon\Carbon::parse($daypicker, $page['timezone'])->isoFormat('MMM Do YY') }}</a>
+        <div class="p-2 bg-light border mb-2">
+            <span class="fw-bold">Day: </span><a href="{{ url('/'.$segments['discussions']) }}{{ '?_day_picker='.$daypicker }}" class="btn btn-success btn-sm active" role="button" aria-pressed="true">{{ \Carbon\Carbon::parse($daypicker, $page['timezone'])->isoFormat('MMM Do YY') }}</a>
         </div>
     @endif
 
-    <div>
-        <a href="{{ url('/'.$segments['discussions'].$discussion->category->getUrl()) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">{{ $discussion->category->name }}</a>
-    </div>
-
-    <div>
-        <img src="{{ $discussion->getMediaThumbnail() }}">
+    <div class="p-2 bg-light border mb-2">
+        <span class="fw-bold">Category: </span><a href="{{ url('/'.$segments['discussions'].$discussion->category->getUrl()) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">{{ $discussion->category->name }}</a>
     </div>
 
     @include('themes.starter.partials.discussion.registration')

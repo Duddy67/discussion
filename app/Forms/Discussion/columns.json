@@ -14,7 +14,8 @@
   {
     "label": "labels.discussion.discussion_date",
     "name": "discussion_date",
-    "type": "date"
+    "type": "date",
+    "format": "d M Y H:i"
   },
   {
     "label": "labels.generic.category",

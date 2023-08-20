@@ -27,12 +27,7 @@ class DiscussionController extends Controller
     use Form;
 
     /*
-     * Instance of the model.
-     */
-    protected $model;
-
-    /*
-     * The item to edit in the form.
+     * Instance of the Discussion model, (used in the Form trait).
      */
     protected $item = null;
 
@@ -46,7 +41,7 @@ class DiscussionController extends Controller
         $this->middleware('auth')->except(['show', 'index']);
         // Unregistered users can access discussions.
         $this->middleware('discussions')->except(['show', 'index']);
-        $this->model = new Discussion;
+        $this->item = new Discussion;
     }
 
     public function index(Request $request)

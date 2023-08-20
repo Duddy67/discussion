@@ -23,6 +23,8 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Work Sans:100,200,300,400,500|Whisper|Alex Brush">
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+        <!-- Select2 plugin style -->
+        <link rel="stylesheet" href="{{ asset('/vendor/adminlte/plugins/select2/css/select2.min.css') }}">
         <!-- Daterangepicker -->
         <link rel="stylesheet" href="{{ asset('/vendor/adminlte/plugins/daterangepicker/daterangepicker.css') }}">
     </head>
