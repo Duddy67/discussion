@@ -18,9 +18,9 @@
         <span class="fw-bold">Platform: </span>{{ __('labels.discussion.'.$discussion->platform) }}
     </div>
 
-    @if ($discussion->isUserRegistered() && $discussion->getTimeBeforeDiscussionInMinutes() < $discussion::DELAY_BEFORE_SHOWING_LINK)
-        <div>
-            {{ $discussion->discussion_link }}
+    @if ($discussion->isUserRegistered() && $discussion->canShowDiscussionLink())
+        <div class="p-2 bg-light border mb-2">
+            <span class="fw-bold">Meeting link: </span>{{ $discussion->discussion_link }}
         </div>
     @endif
 

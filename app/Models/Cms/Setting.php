@@ -10,6 +10,7 @@ use App\Models\User\Group;
 use App\Models\User;
 use App\Models\Menu;
 use App\Traits\OptionList;
+use Carbon\Carbon;
 
 
 class Setting extends Model
@@ -219,6 +220,7 @@ class Setting extends Model
         $page['name'] = $name;
         $page['menu'] = Menu::getMenu('main-menu');
         $page['theme'] = $data['website']['theme'];
+        $page['now'] = Carbon::now();
         $page['timezone'] = $data['app']['timezone'];
         $page['allow_registering'] = $data['website']['allow_registering'];
 

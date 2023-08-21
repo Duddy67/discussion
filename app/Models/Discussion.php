@@ -55,7 +55,8 @@ class Discussion extends Model
     ];
 
     const MAX_ATTENDEES = 10;
-    const DELAY_BEFORE_SHOWING_LINK = 30;
+    const DELAY_BEFORE_SHOWING_LINK = 15; // In minutes.
+    const DELAY_BEFORE_HIDDING_LINK = 15; // In minutes.
 
     /**
      * Get the category that owns the discussion.
@@ -212,12 +213,13 @@ class Discussion extends Model
 
     public function getTimeBeforeDiscussion(): ?\stdClass
     {
-        if (!$dates = $this->getDateTimes()) {
+        if (!$dates = $this->getValidDateTimes()) {
             return null;
         }
 
         $time = new \stdClass();
 
+        // IMPORTANT: Use the copy() function when adding days or the original now date will be modified.
         $time->days = $dates['now']->diffInDays($dates['discussion']);
         $time->hours = $dates['now']->copy()->addDays($time->days)->diffInHours($dates['discussion']);
         $time->minutes = $dates['now']->copy()->addDays($time->days)->addHours($time->hours)->diffInMinutes($dates['discussion']);
@@ -227,11 +229,26 @@ class Discussion extends Model
 
     public function getTimeBeforeDiscussionInMinutes(): ?int
     {
-        if (!$dates = $this->getDateTimes()) {
+        if (!$dates = $this->getValidDateTimes()) {
             return null;
         }
 
         return $dates['now']->diffInMinutes($dates['discussion']);
+    }
+
+    public function canShowDiscussionLink(): bool
+    {
+        $canShow = false;
+        $dates = $this->getDateTimes();
+
+        // IMPORTANT: Use the copy() function when adding and substracting minutes or the
+        //            original discussion date will be modified.
+        if ($dates['now']->gt($dates['discussion']->copy()->subMinutes(Discussion::DELAY_BEFORE_SHOWING_LINK)) &&
+            $dates['now']->lt($dates['discussion']->copy()->addMinutes(Discussion::DELAY_BEFORE_HIDDING_LINK))) {
+            $canShow = true;
+        }
+
+        return $canShow; 
     }
 
     private function attendees(bool $onWaitingList = false): \Illuminate\Database\Eloquent\Collection 
@@ -269,17 +286,29 @@ class Discussion extends Model
     }
 
     /*
-     * Returns the datetimes for now and the discussion.
+     * Returns the datetimes for now and the discussion and check if the discussion
+     * datetime is still valid.
      */
-    private function getDateTimes(): ?array
+    private function getValidDateTimes(): ?array
     {
-        $now = Carbon::parse(Carbon::now());
-        $discussion = Carbon::parse($this->discussion_date);
+        $dates = $this->getDateTimes();
 
         // Check the discussion date is still valid.
-        if ($now->gt($discussion) || $now->eq($discussion)) {
+        if ($dates['now']->gt($dates['discussion']) || $dates['now']->eq($dates['discussion'])) {
             return null;
         }
+
+        return $dates;
+    }
+
+    /*
+     * Returns the datetimes for now and the discussion.
+     */
+    private function getDateTimes(): array
+    {
+        $timezone = Setting::getValue('app', 'timezone');
+        $now = Carbon::parse(Carbon::now($timezone));
+        $discussion = Carbon::parse($this->discussion_date)->tz($timezone);
 
         return ['now' => $now, 'discussion' => $discussion];
     }
