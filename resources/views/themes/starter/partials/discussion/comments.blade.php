@@ -1,8 +1,8 @@
-<h3>{{ __('labels.discussion.comments') }}</h3>
+<h3>{{ __('labels.post.comments') }}</h3>
 
 @guest
     <div class="alert alert-info" role="alert">
-        {{ __('messages.discussion.comments_authentication_required') }}
+        {{ __('messages.post.comments_authentication_required') }}
     </div>
 @endguest
 
@@ -23,19 +23,21 @@
 <div class="row" id="comment-counter">
     <div class="col-12 mb-2">
         <span class="float-end" id="nb-comments">{{ ($discussion->comments()->exists()) ? $discussion->comments->count() : 0 }}</span>
-        <span class="float-end">@lang ('labels.discussion.comments'):&nbsp;</span>
+        <span class="float-end">@lang ('labels.post.comments'):&nbsp;</span>
     </div>
 </div>
 
-@if ($discussion->comments()->exists())
-    @foreach ($discussion->comments as $comment)
-        @include('themes.starter.partials.discussion.comment')
-    @endforeach
-@endif
+<div class="row" id="comment-list">
+    @if ($count = $discussion->comments()->count())
+        @foreach ($discussion->comments as $key => $comment)
+            @include('themes.starter.partials.discussion.comment', ['count' => $count, 'key' => $key])
+        @endforeach
+    @endif
+</div>
 
 @push('scripts')
     <script type="text/javascript" src="{{ asset('/vendor/tinymce/tinymce.min.js') }}"></script>
     <script src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('/js/discussion/comment.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/post/comment.js') }}"></script>
 @endpush
 

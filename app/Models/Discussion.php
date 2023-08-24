@@ -57,6 +57,7 @@ class Discussion extends Model
     const MAX_ATTENDEES = 10;
     const DELAY_BEFORE_SHOWING_LINK = 15; // In minutes.
     const DELAY_BEFORE_HIDDING_LINK = 15; // In minutes.
+    const DELAY_BEFORE_BLOCKING_COMMENTS = 4; // In hours.
 
     /**
      * Get the category that owns the discussion.
@@ -87,10 +88,11 @@ class Discussion extends Model
      */
     public function comments()
     {
+        // Returns the post comments in ascending order (oldest on top).
         return $this->hasMany(Comment::class)
                     ->leftJoin('users', 'users.id', '=', 'discussion_comments.owned_by')
                     ->select('discussion_comments.*', 'users.name AS author')
-                    ->orderBy('discussion_comments.created_at', 'desc');
+                    ->orderBy('discussion_comments.created_at', 'asc');
     }
 
     /**
@@ -249,6 +251,13 @@ class Discussion extends Model
         }
 
         return $canShow; 
+    }
+
+    public function canWriteComments(): bool
+    {
+        $dates = $this->getDateTimes();
+        // IMPORTANT: Use the copy() function when adding hours or the original discussion date will be modified.
+        return ($dates['now']->lt($dates['discussion']->copy()->addHours(Discussion::DELAY_BEFORE_BLOCKING_COMMENTS))) ? true : false;
     }
 
     private function attendees(bool $onWaitingList = false): \Illuminate\Database\Eloquent\Collection 

@@ -40,13 +40,13 @@
         <a href="{{ route('discussions.edit', $discussion->id) }}" class="btn btn-success">Edit</a>
     @endif
 
-    @if (!auth()->check())
+    @if (!auth()->check() && $discussion->getTimeBeforeDiscussionInMinutes())
         <div>@lang ('messages.discussion.registration_required')</div>
     @endif
 
     @include('themes.starter.partials.discussion.comments')
 
 @push ('scripts')
-    <!--<script src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>-->
-    <!--<script src="{{ asset('/js/discussion.js') }}"></script>-->
+    <script src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>
+    <script src="{{ asset('/js/discussion.js') }}"></script>
 @endpush

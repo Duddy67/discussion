@@ -304,8 +304,8 @@ class DiscussionController extends Controller
     public function register(Discussion $discussion)
     {
         if (!$discussion->isUserRegistered() && !$discussion->isUserOnWaitingList()) {
-            $waitingList = ($discussion->isSoldOut()) ? true : false;
-            $registration = new Registration(['user_id' => auth()->user()->id, 'on_waiting_list' => $waitingList]);
+            $onWaitingList = ($discussion->isSoldOut()) ? true : false;
+            $registration = new Registration(['user_id' => auth()->user()->id, 'on_waiting_list' => $onWaitingList]);
             $discussion->registrations()->save($registration);
         }
 
@@ -337,15 +337,29 @@ class DiscussionController extends Controller
         $discussion = Discussion::find($id);
         $discussion->comments()->save($comment);
 
+        // Set variables used in the render.
         $comment->author = auth()->user()->name;
         $theme = Setting::getValue('website', 'theme', 'starter');
-        $timezone = Setting::getValue('app', 'timezone');
+        $page = Setting::getPage('discussion');
+        $count = $discussion->comments()->count();
+        $key = $count - 1;
+
+        if ($discussion->comment_alert && auth()->user()->id != $discussion->owned_by) {
+            $author = User::find($discussion->owned_by);
+            $discussion->recipient = $author->email;
+            $discussion->post_author = $author->name;
+            $discussion->comment_author = auth()->user()->name;
+            $discussion->post_url = url('/').$discussion->getUrl();
+            Email::sendEmail('comment-alert', $discussion);
+        }
 
         return response()->json([
             'id' => $comment->id, 
             'action' => 'create', 
-            'render' => view('themes.'.$theme.'.partials.discussion.comment', compact('comment', 'timezone'))->render(),
+            'render' => view('themes.'.$theme.'.partials.discussion.comment', compact('comment', 'page', 'count', 'key'))->render(),
             'text' => $comment->text,
+            'count' => $count,
+            'key' => $key,
             'message' => __('messages.discussion.create_comment_success'),
         ]);
     }
