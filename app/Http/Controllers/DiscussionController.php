@@ -10,6 +10,7 @@ use App\Models\Cms\Comment;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Models\Cms\Setting;
+use App\Models\Cms\Email;
 use App\Models\User;
 use App\Models\User\Group;
 use App\Traits\Form;

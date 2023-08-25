@@ -47,6 +47,5 @@
     @include('themes.starter.partials.discussion.comments')
 
 @push ('scripts')
-    <script src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>
     <script src="{{ asset('/js/discussion.js') }}"></script>
 @endpush
