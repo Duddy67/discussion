@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Discussion\Category;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\WaitingList;
-use App\Models\Discussion\Comment;
+use App\Models\Cms\Comment;
 use App\Models\Cms\Setting;
 use App\Models\User\Group;
 use App\Traits\AccessLevel;
@@ -89,10 +89,10 @@ class Discussion extends Model
     public function comments()
     {
         // Returns the post comments in ascending order (oldest on top).
-        return $this->hasMany(Comment::class)
-                    ->leftJoin('users', 'users.id', '=', 'discussion_comments.owned_by')
-                    ->select('discussion_comments.*', 'users.name AS author')
-                    ->orderBy('discussion_comments.created_at', 'asc');
+        return $this->morphMany(Comment::class, 'commentable')
+                    ->leftJoin('users', 'users.id', '=', 'comments.owned_by')
+                    ->select('comments.*', 'users.name AS author')
+                    ->orderBy('comments.created_at', 'asc');
     }
 
     /**

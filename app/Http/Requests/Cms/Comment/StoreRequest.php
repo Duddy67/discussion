@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Discussion\Comment;
+namespace App\Http\Requests\Cms\Comment;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-
-class UpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,19 +21,19 @@ class UpdateRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function rules()
     {
         return [
-            'comment-'.$this->comment->id => 'required',
+            'comment-0' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'comment-'.$this->comment->id.'.required' => 'Your comment cannot be empty.'
+            'comment-0.required' => 'Your comment cannot be empty.'
         ];
     }
 
@@ -44,7 +42,7 @@ class UpdateRequest extends FormRequest
         throw new HttpResponseException(response()->json([
               'errors' => $validator->errors(), 
               'status' => true, 
-              'commentId' => $this->comment->id,
+              'commentId' => 0,
               'message' => __('messages.generic.form_errors')
         ], 422));
     }

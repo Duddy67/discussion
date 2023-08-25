@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Discussion;
 use App\Models\Discussion\Category;
-use App\Models\Discussion\Comment;
+use App\Models\Cms\Comment;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Models\Cms\Setting;
@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Discussion\StoreRequest;
 use App\Http\Requests\Discussion\UpdateRequest;
 use Illuminate\Support\Str;
-use App\Http\Requests\Discussion\Comment\StoreRequest as CommentStoreRequest;
-use App\Http\Requests\Discussion\Comment\UpdateRequest as CommentUpdateRequest;
+use App\Http\Requests\Cms\Comment\StoreRequest as CommentStoreRequest;
+use App\Http\Requests\Cms\Comment\UpdateRequest as CommentUpdateRequest;
 use Carbon\Carbon;
 
 
