@@ -49,21 +49,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    document.getElementById('submit').onclick = function(e) { 
-        const spinner = document.getElementById('ajax-progress');
-        spinner.classList.remove('d-none');
+    if (document.getElementById('submit')) {
+        document.getElementById('submit').onclick = function(e) { 
+            const spinner = document.getElementById('ajax-progress');
+            spinner.classList.remove('d-none');
 
-        let formData = new FormData(document.getElementById('form'));
+            let formData = new FormData(document.getElementById('form'));
 
-        let ajax = new C_Ajax.init({
-            method: 'post',
-            url: document.getElementById('form').action,
-            dataType: 'json',
-            data: formData,
-            headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 'Accept': 'application/json'}
-        });
+            let ajax = new C_Ajax.init({
+                method: 'post',
+                url: document.getElementById('form').action,
+                dataType: 'json',
+                data: formData,
+                headers: {'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'), 'Accept': 'application/json'}
+            });
 
-        ajax.run(getAjaxResult);
+            ajax.run(getAjaxResult);
+        }
     }
 
     function getAjaxResult(status, result) {
