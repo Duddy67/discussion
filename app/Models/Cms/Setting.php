@@ -10,7 +10,6 @@ use App\Models\User\Group;
 use App\Models\User;
 use App\Models\Menu;
 use App\Traits\OptionList;
-use Carbon\Carbon;
 
 
 class Setting extends Model
@@ -106,6 +105,11 @@ class Setting extends Model
      */
     public static function getSettingClassModel(mixed $model): ?string
     {
+        // In case of category, use the setting class of the categorizable model
+        if (isset($model->collection_type)) {
+            return '\\App\\Models\\'.ucfirst($model->collection_type).'\\Setting';
+        }
+
         // Get the class names contained in the namespace.
         $classes = explode('\\', get_class($model));
 
@@ -220,7 +224,6 @@ class Setting extends Model
         $page['name'] = $name;
         $page['menu'] = Menu::getMenu('main-menu');
         $page['theme'] = $data['website']['theme'];
-        $page['now'] = Carbon::now();
         $page['timezone'] = $data['app']['timezone'];
         $page['allow_registering'] = $data['website']['allow_registering'];
 

@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Admin\Discussion;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Discussion\Category;
+use App\Models\Cms\Category;
 use App\Models\User\Group;
 use App\Models\User;
 use App\Models\Cms\Setting;
 use App\Traits\Form;
 use App\Models\Cms\Document;
+use App\Models\Discussion;
 use App\Traits\CheckInCheckOut;
 use App\Http\Requests\Discussion\Category\StoreRequest;
 use App\Http\Requests\Discussion\Category\UpdateRequest;
@@ -35,6 +36,7 @@ class CategoryController extends Controller
         $this->middleware('auth');
         $this->middleware('admin.discussions.categories');
         $this->item = new Category;
+        $this->item->collection_type = 'discussion';
     }
 
     /**
@@ -49,12 +51,12 @@ class CategoryController extends Controller
         $columns = $this->getColumns();
         $actions = $this->getActions('list');
         $filters = $this->getFilters($request);
-        $items = Category::getCategories($request);
+        $items = Category::getCategories($request, 'discussion');
         $rows = $this->getRowTree($columns, $items);
         $query = $request->query();
         $url = ['route' => 'admin.discussions.categories', 'item_name' => 'category', 'query' => $query];
 
-        return view('admin.discussion.category.list', compact('items', 'columns', 'rows', 'actions', 'filters', 'url', 'query'));
+        return view('admin.cms.category.list', compact('items', 'columns', 'rows', 'actions', 'filters', 'url', 'query'));
     }
 
     /**
@@ -72,7 +74,7 @@ class CategoryController extends Controller
         $actions = $this->getActions('form', ['destroy']);
         $query = $request->query();
 
-        return view('admin.discussion.category.form', compact('fields', 'actions', 'query'));
+        return view('admin.cms.category.form', compact('fields', 'actions', 'query'));
     }
 
     /**
@@ -84,9 +86,9 @@ class CategoryController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $category = $this->item = Category::select('discussion_categories.*', 'users.name as owner_name', 'users2.name as modifier_name')
-                                            ->leftJoin('users', 'discussion_categories.owned_by', '=', 'users.id')
-                                            ->leftJoin('users as users2', 'discussion_categories.updated_by', '=', 'users2.id')
+        $category = $this->item = Category::select('categories.*', 'users.name as owner_name', 'users2.name as modifier_name')
+                                            ->leftJoin('users', 'categories.owned_by', '=', 'users.id')
+                                            ->leftJoin('users as users2', 'categories.updated_by', '=', 'users2.id')
                                             ->findOrFail($id);
 
         if (!$category->canAccess()) {
@@ -112,7 +114,7 @@ class CategoryController extends Controller
         // Get the owner of the category in order to check (in the template) if they're still allowed to create categories.
         $owner = User::find($category->owned_by);
 
-        return view('admin.discussion.category.form', compact('category', 'owner', 'fields', 'actions', 'query'));
+        return view('admin.cms.category.form', compact('category', 'owner', 'fields', 'actions', 'query'));
     }
 
     /**
@@ -249,6 +251,8 @@ class CategoryController extends Controller
             return response()->json(['redirect' => route('admin.discussions.categories.index', $request->query())]);
         }
 
+        $this->item = $category;
+
         return response()->json(['success' => __('messages.category.update_success'), 'refresh' => $this->getFieldsToRefresh($request)]);
     }
 
@@ -289,6 +293,8 @@ class CategoryController extends Controller
             'meta_data' => $request->input('meta_data'),
             'settings' => $request->input('settings'),
         ]);
+
+        $category->collection_type = 'discussion';
 
         if ($category->parent_id) {
             $parent = Category::findOrFail($category->parent_id);
@@ -522,7 +528,9 @@ class CategoryController extends Controller
      */
     private function setFieldValues(&$fields, Category $category)
     {
-        $globalSettings = Setting::getDataByGroup('categories', $category);
+        // Pass a Discussion object as model to get the discussion data setting.
+        $discussion = new Discussion;
+        $globalSettings = Setting::getDataByGroup('categories', $discussion);
 
         foreach ($fields as $field) {
             if ($field->name == 'parent_id') {

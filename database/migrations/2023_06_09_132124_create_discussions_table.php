@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('media_link', 100);
             $table->char('access_level', 10);
             $table->char('status', 12);
-            $table->unsignedBigInteger('category_id');
             $table->timestamp('discussion_date')->nullable();
             $table->char('platform', 15);
             $table->string('discussion_link');

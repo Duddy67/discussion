@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Discussion;
-use App\Models\Discussion\Category;
+use App\Models\Cms\Category;
 use App\Models\User;
 use App\Models\User\Group;
 use App\Models\Cms\Setting;
@@ -191,8 +191,11 @@ class DiscussionController extends Controller
 
         $discussion->save();
         //$discussion->category()->save($request->input('category'));
-        $category = Category::find($request->input('category_id'));
-        $category->discussions()->save($discussion);
+        //$category = Category::find($request->input('category_id'));
+        //$category->discussions()->save($discussion);
+        if ($request->input('category_id') != $discussion->categories->first()->id) {
+            $discussion->categories()->sync([$request->input('category_id')]);
+        }
 
         if ($request->input('_close', null)) {
             $discussion->safeCheckIn();
@@ -236,8 +239,9 @@ class DiscussionController extends Controller
 
         $discussion->save();
 
-        $category = Category::find($request->input('category_id'));
-        $category->discussions()->save($discussion);
+        //$category = Category::find($request->input('category_id'));
+        //$category->discussions()->save($discussion);
+        $discussion->categories()->attach([$request->input('category_id')]);
 
         if ($request->input('groups') !== null) {
             $discussion->groups()->attach($request->input('groups'));
@@ -463,7 +467,7 @@ class DiscussionController extends Controller
         foreach ($discussions as $key => $discussion) {
             foreach ($columns as $column) {
                 if ($column->name == 'category') {
-                    $rows[$key]->category = $discussion->category->name;
+                    $rows[$key]->category = $discussion->categories->first()->name;
                 }
 
                 if ($column->name == 'attendees') {

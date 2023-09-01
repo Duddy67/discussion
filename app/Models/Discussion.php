@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Discussion\Category;
+use App\Models\Cms\Category;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\WaitingList;
 use App\Models\Cms\Comment;
@@ -17,6 +18,7 @@ use App\Traits\CheckInCheckOut;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class Discussion extends Model
 {
@@ -62,9 +64,9 @@ class Discussion extends Model
     /**
      * Get the category that owns the discussion.
      */
-    public function category(): BelongsTo
+    public function categories(): MorphToMany
     {
-        return $this->belongsTo(Category::class);
+        return $this->morphToMany(Category::class, 'categorizable')->where('collection_type', 'discussion');
     }
 
     /**
@@ -109,6 +111,7 @@ class Discussion extends Model
         });
 
         static::deleting(function (Discussion $discussion) {
+            $this->categories()->detach();
             $discussion->groups()->detach();
             $discussion->registrations()->delete();
         });
@@ -146,7 +149,9 @@ class Discussion extends Model
 
         // Filter by categories
         if (!empty($categories)) {
-            $query->whereIn('discussions.category_id', $categories);
+            $query->whereHas('categories', function($query) use($categories) {
+                $query->whereIn('id', $categories);
+            });
         }
 
         if (!empty($groups)) {
@@ -196,6 +201,86 @@ class Discussion extends Model
     {
         $segments = Setting::getSegments('Discussion');
         return '/'.$segments['discussions'].'/'.$this->id.'/'.$this->slug;
+    }
+
+    /*
+     * Returns the discussion items that belong to the given category.
+     */
+    public static function getCategoryItems(Request $request, Category $category, array $options = [])
+    {
+        $query = Discussion::query();
+        $query->select('discussions.*', 'users.name as owner_name')->leftJoin('users', 'discussions.owned_by', '=', 'users.id');
+        // Join the role tables to get the owner's role level.
+        $query->join('model_has_roles', 'discussions.owned_by', '=', 'model_id')->join('roles', 'roles.id', '=', 'role_id');
+
+        // Get only the discussions related to this category. 
+        $query->whereHas('categories', function($query) use($category) {
+            $query->where('id', $category->id);
+        });
+
+        if (Auth::check()) {
+
+            // N.B: Put the following part of the query into brackets.
+            $query->where(function($query) {
+
+                // Check for access levels.
+                $query->where(function($query) {
+                    $query->where('roles.role_level', '<', auth()->user()->getRoleLevel())
+                          ->orWhereIn('discussions.access_level', ['public_ro', 'public_rw'])
+                          ->orWhere('discussions.owned_by', auth()->user()->id);
+                });
+
+                $groupIds = auth()->user()->getGroupIds();
+
+                if (!empty($groupIds)) {
+                    // Check for access through groups.
+                    $query->orWhereHas('groups', function($query)  use($groupIds) {
+                        $query->whereIn('id', $groupIds);
+                    });
+                }
+            });
+        }
+        else {
+            $query->whereIn('discussions.access_level', ['public_ro', 'public_rw']);
+        }
+ 
+        // Do not show unpublished discussions on front-end.
+        $query->where('discussions.status', 'published');
+
+        // Set post ordering.
+        $settings = $category->getSettings();
+
+        if ($settings['discussion_ordering'] != 'no_ordering') {
+            // Extract the ordering name and direction from the setting value.
+            preg_match('#^([a-z-0-9_]+)_(asc|desc)$#', $settings['discussion_ordering'], $ordering);
+
+            // Check for numerical sorting.
+            if ($ordering[1] == 'order') {
+                $query->join('orders', function($join) use($ordering, $category) { 
+                    $join->on('discussions.id', '=', 'orderable_id')
+                         ->where('orderable_type', '=', Discussion::class)
+                         ->where('category_id', '=', $category->id);
+                })->orderBy('item_order', $ordering[2]);
+            }
+            // Regular sorting.
+            else {
+                $query->orderBy($ordering[1], $ordering[2]);
+            }
+        }
+
+        $search = $request->input('search', null);
+
+        if ($search !== null) {
+            $query->where('discussions.subject', 'like', '%'.$search.'%');
+        }
+
+        if (in_array('pagination', $options)) {
+            $perPage = $request->input('per_page', Setting::getValue('pagination', 'per_page'));
+
+            return $query->paginate($perPage);
+        }
+
+        return $query->get();
     }
 
     public function getMediaThumbnail()
@@ -334,6 +419,10 @@ class Discussion extends Model
 
         if (isset($field->group) && $field->group == 'settings') {
             return (isset($this->settings[$field->name])) ? $this->settings[$field->name] : null;
+        }
+
+        if ($field->name == 'category_id') {
+            return $this->categories->first()->id;
         }
 
         // Single

@@ -159,35 +159,5 @@
     "extra": ["global_setting"],
     "group": "settings",
     "options": [] 
-  },
-  {
-    "label": "labels.discussion.show_discussion_media_thumbnail",
-    "type": "select",
-    "name": "show_discussion_media_thumbnail",
-    "function": "yes_no",
-    "id": "show_discussion_media_thumbnail",
-    "extra": ["global_setting"],
-    "group": "settings",
-    "options": [] 
-  },
-  {
-    "label": "labels.discussion.show_discussion_category",
-    "type": "select",
-    "name": "show_discussion_category",
-    "function": "yes_no",
-    "id": "show_discussion_category",
-    "extra": ["global_setting"],
-    "group": "settings",
-    "options": [] 
-  },
-  {
-    "label": "labels.discussion.discussion_ordering",
-    "type": "select",
-    "name": "discussion_ordering",
-    "function": "item_ordering",
-    "id": "discussion_ordering",
-    "extra": ["global_setting"],
-    "group": "settings",
-    "options": [] 
   }
 ]

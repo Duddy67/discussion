@@ -36,7 +36,7 @@ class Setting extends Model
     public $timestamps = false;
 
 
-    public static function getDiscussionOrderingOptions(): array
+    public static function getItemOrderingOptions(): array
     {
       return [
 	  ['value' => 'discussion_date_asc', 'text' => __('labels.discussion.discussion_date_asc')],

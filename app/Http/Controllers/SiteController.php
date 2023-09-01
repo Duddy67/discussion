@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Discussion\Category;
+use App\Models\Cms\Category;
 use App\Models\Discussion\Setting as DiscussionSetting;
-//use App\Models\Post\Category as PostCategory;
 //use App\Models\Post\Setting as PostSetting;
 use App\Models\Cms\Setting;
 
@@ -22,7 +21,8 @@ class SiteController extends Controller
         if ($category = Category::where('slug', $page)->first()) {
             $category->settings = $category->getSettings();
             $metaData = $category->meta_data;
-            $discussions = ($page['name'] == 'home') ? $category->getAll() : $category->getAllDiscussions($request);
+            //$discussions = ($page['name'] == 'home') ? $category->getAll() : $category->getItemCollection($request);
+            $discussions = $category->getItemCollection($request);
 
             if (count($discussions)) {
                 // Use the first discussion as model to get the global discussion settings.
