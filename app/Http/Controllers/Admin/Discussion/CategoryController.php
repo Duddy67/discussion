@@ -12,8 +12,8 @@ use App\Traits\Form;
 use App\Models\Cms\Document;
 use App\Models\Discussion;
 use App\Traits\CheckInCheckOut;
-use App\Http\Requests\Discussion\Category\StoreRequest;
-use App\Http\Requests\Discussion\Category\UpdateRequest;
+use App\Http\Requests\Cms\Category\StoreRequest;
+use App\Http\Requests\Cms\Category\UpdateRequest;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -55,8 +55,9 @@ class CategoryController extends Controller
         $rows = $this->getRowTree($columns, $items);
         $query = $request->query();
         $url = ['route' => 'admin.discussions.categories', 'item_name' => 'category', 'query' => $query];
+        $collection = 'discussions';
 
-        return view('admin.cms.category.list', compact('items', 'columns', 'rows', 'actions', 'filters', 'url', 'query'));
+        return view('admin.cms.category.list', compact('items', 'columns', 'rows', 'actions', 'collection', 'filters', 'url', 'query'));
     }
 
     /**
@@ -72,9 +73,10 @@ class CategoryController extends Controller
         $fields = $this->getFields(['updated_by', 'created_at', 'updated_at', 'owner_name']);
         $this->setFieldValues($fields, $this->item);
         $actions = $this->getActions('form', ['destroy']);
+        $collection = 'discussions';
         $query = $request->query();
 
-        return view('admin.cms.category.form', compact('fields', 'actions', 'query'));
+        return view('admin.cms.category.form', compact('fields', 'actions', 'collection', 'query'));
     }
 
     /**
@@ -113,15 +115,16 @@ class CategoryController extends Controller
         $query = array_merge($request->query(), ['category' => $id]);
         // Get the owner of the category in order to check (in the template) if they're still allowed to create categories.
         $owner = User::find($category->owned_by);
+        $collection = 'discussions';
 
-        return view('admin.cms.category.form', compact('category', 'owner', 'fields', 'actions', 'query'));
+        return view('admin.cms.category.form', compact('category', 'owner', 'fields', 'collection', 'actions', 'query'));
     }
 
     /**
      * Checks the record back in.
      *
      * @param  Request  $request
-     * @param  \App\Models\Discussion\Category  $category (optional)
+     * @param  \App\Models\Cms\Category  $category (optional)
      * @return Response
      */
     public function cancel(Request $request, Category $category = null)
@@ -136,8 +139,8 @@ class CategoryController extends Controller
     /**
      * Update the specified category. (AJAX)
      *
-     * @param  \App\Http\Requests\Discussion\Category\UpdateRequest  $request
-     * @param  \App\Models\Discussion\Category $category
+     * @param  \App\Http\Requests\Cms\Category\UpdateRequest  $request
+     * @param  \App\Models\Cms\Category $category
      * @return Response
      */
     public function update(UpdateRequest $request, Category $category)
@@ -259,7 +262,7 @@ class CategoryController extends Controller
     /**
      * Store a new category.
      *
-     * @param  \App\Http\Requests\Discussion\Category\StoreRequest  $request
+     * @param  \App\Http\Requests\Cms\Category\StoreRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreRequest $request)
@@ -322,7 +325,7 @@ class CategoryController extends Controller
      * Remove the specified category from storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Discussion\Category $category
+     * @param  \App\Models\Cms\Category $category
      * @return Response
      */
     public function destroy(Request $request, Category $category)
@@ -456,7 +459,7 @@ class CategoryController extends Controller
      * Delete the image Document linked to the item.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Discussion\Category $category
+     * @param  \App\Models\Cms\Category $category
      * @return JSON
      */
     public function deleteImage(Request $request, Category $category)
@@ -495,7 +498,7 @@ class CategoryController extends Controller
      * Reorders a given category a level above.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Discussion\Category $category
+     * @param  \App\Models\Cms\Category $category
      * @return Response
      */
     public function up(Request $request, Category $category)
@@ -508,7 +511,7 @@ class CategoryController extends Controller
      * Reorders a given category a level below.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Discussion\Category $category
+     * @param  \App\Models\Cms\Category $category
      * @return Response
      */
     public function down(Request $request, Category $category)
@@ -523,7 +526,7 @@ class CategoryController extends Controller
      * Sets field values specific to the Category model.
      *
      * @param  Array of stdClass Objects  $fields
-     * @param  \App\Models\Discussion\Category $category
+     * @param  \App\Models\Cms\Category $category
      * @return void
      */
     private function setFieldValues(&$fields, Category $category)

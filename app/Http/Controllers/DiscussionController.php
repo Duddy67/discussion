@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Discussion;
-use App\Models\Discussion\Category;
+use App\Models\Cms\Category;
 use App\Models\Cms\Comment;
 use App\Models\Discussion\Registration;
 use App\Models\Discussion\Setting as DiscussionSetting;

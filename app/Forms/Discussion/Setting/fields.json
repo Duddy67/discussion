@@ -113,6 +113,7 @@
     "label": "labels.discussion.discussion_ordering",
     "type": "select",
     "name": "discussion_ordering",
+    "function": "item_ordering",
     "id": "discussion_ordering",
     "group": "categories",
     "options": [] 

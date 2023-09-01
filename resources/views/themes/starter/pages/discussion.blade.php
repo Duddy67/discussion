@@ -31,7 +31,7 @@
     @endif
 
     <div class="p-2 bg-light border mb-2">
-        <span class="fw-bold">Category: </span><a href="{{ url('/'.$segments['discussions'].$discussion->category->getUrl()) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">{{ $discussion->category->name }}</a>
+        <span class="fw-bold">Category: </span><a href="{{ url('/'.$segments['discussions'].$discussion->categories->first()->getUrl()) }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">{{ $discussion->categories->first()->name }}</a>
     </div>
 
     @include('themes.starter.partials.discussion.registration')

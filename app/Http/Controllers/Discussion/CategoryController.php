@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Discussion;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Discussion\Category;
+use App\Models\Cms\Category;
 use App\Models\Cms\Setting;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +26,7 @@ class CategoryController extends Controller
 	}
 
         $category->settings = $category->getSettings();
-	$discussions = $category->getDiscussions($request);
+	$discussions = $category->getItemCollection($request, ['pagination']);
 
         if (count($discussions)) {
             // Use the first discussion as model to get the global discussion settings.
