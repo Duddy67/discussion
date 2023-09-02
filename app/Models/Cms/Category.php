@@ -9,8 +9,6 @@ use App\Models\Cms\Setting;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\Post\Setting as PostSetting;
-use App\Models\Discussion;
-use App\Models\Discussion\Setting as DiscussionSetting;
 use App\Models\Cms\Order;
 use App\Models\Cms\Document;
 use App\Traits\Node;
@@ -81,8 +79,6 @@ class Category extends Model
     protected $categorizableTypes = [
         'post' => Post::class,
         'post_setting' => PostSetting::class,
-        'discussion' => Discussion::class,
-        'discussion_setting' => DiscussionSetting::class,
     ];
 
     /**
@@ -101,14 +97,6 @@ class Category extends Model
     public function posts(): MorphToMany
     {
         return $this->morphedByMany(Post::class, 'categorizable');
-    }
-
-    /**
-     * Get all of the discussions that are assigned this category.
-     */
-    public function discussions(): MorphToMany
-    {
-        return $this->morphedByMany(Discussion::class, 'categorizable');
     }
 
     /**
@@ -156,17 +144,17 @@ class Category extends Model
      */
     public static function getCategories(Request $request, string $collectionType)
     {
-        $search = $request->input('search', null);
+        $query = Category::query();
+        $query->select('categories.*', 'users.name as owner_name')
+              ->leftJoin('users', 'categories.owned_by', '=', 'users.id')
+              ->where('collection_type', $collectionType);
 
-        if ($search !== null) {
-            return Category::where('name', 'like', '%'.$search.'%')->where('collection_type', $collectionType)->get();
+        if ($search = $request->input('search', null)) {
+            // No tree display while searching.
+            return $query->where('categories.name', 'like', '%'.$search.'%')->get();
         }
-        else {
-            return Category::select('categories.*', 'users.name as owner_name')
-                             ->leftJoin('users', 'categories.owned_by', '=', 'users.id')
-                             ->where('collection_type', $collectionType)
-                             ->defaultOrder()->get()->toTree();
-        }
+
+        return $query->defaultOrder()->get()->toTree();
     }
 
     public function getUrl()
