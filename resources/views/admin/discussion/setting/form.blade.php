@@ -3,6 +3,8 @@
 @section ('main')
     <h3>@php echo __('labels.discussion.blog_global_settings'); @endphp</h3>
 
+    @include('admin.partials.x-toolbar')
+
     <form method="post" action="{{ route('admin.discussions.settings.update', $query ) }}" id="itemForm">
         @csrf
         @method('patch')
@@ -10,6 +12,7 @@
         <nav class="nav nav-tabs">
             <a class="nav-item nav-link active" href="#discussions" data-toggle="tab">@php echo __('labels.title.discussions'); @endphp</a>
             <a class="nav-item nav-link" href="#categories" data-toggle="tab">@php echo __('labels.title.categories'); @endphp</a>
+            <a class="nav-item nav-link" href="#extra_field_aliases" data-toggle="tab">@php echo __('labels.generic.extra_field_aliases'); @endphp</a>
         </nav>
 
         <div class="tab-content">
@@ -49,10 +52,6 @@
         </div>
 
     </form>
-
-    <div class="form-group">
-        <x-toolbar :items=$actions />
-    </div>
 @endsection
 
 @push ('style')

@@ -538,6 +538,20 @@ class CategoryController extends Controller
         $discussion = new Discussion;
         $globalSettings = Setting::getDataByGroup('categories', $discussion);
 
+        foreach ($globalSettings as $key => $value) {
+            if (str_starts_with($key, 'alias_extra_field_')) {
+                foreach ($fields as $field) {
+                    if ($field->name == $key) {
+                        $field->value = ($value) ? $value : __('labels.generic.none');
+                    }
+                }
+            }
+        }
+
+        if ($category === null) {
+            return;
+        }
+
         foreach ($fields as $field) {
             if ($field->name == 'parent_id') {
                 foreach ($field->options as $key => $option) {

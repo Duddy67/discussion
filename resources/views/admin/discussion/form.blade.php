@@ -3,6 +3,8 @@
 @section ('main')
     <h3>@php echo (isset($discussion)) ? __('labels.discussion.edit_discussion') : __('labels.discussion.create_discussion'); @endphp</h3>
 
+    @include('admin.partials.x-toolbar')
+
     @php $action = (isset($discussion)) ? route('admin.discussions.update', $query) : route('admin.discussions.store', $query) @endphp
     <form method="post" action="{{ $action }}" id="itemForm">
         @csrf
@@ -32,7 +34,6 @@
             <input type="hidden" name="_date_formats[{{ $key }}]" value="{{ $value }}">
         @endforeach
     </form>
-    <x-toolbar :items=$actions />
 
     @if (isset($discussion))
         <form id="deleteItem" action="{{ route('admin.discussions.destroy', $query) }}" method="post">

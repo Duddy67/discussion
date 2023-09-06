@@ -1,5 +1,5 @@
 <div class="position-relative">
-    @include('themes.starter.layouts.flash-message')
+    @include('themes.starter.partials.flash-message')
 @php var_dump(auth()->user()->canAccessAdmin()) @endphp
     @php $action = (isset($discussion)) ? route('discussions.update', $query) : route('discussions.store', $query) @endphp
     <form method="post" action="{{ $action }}" id="form" role="form">
