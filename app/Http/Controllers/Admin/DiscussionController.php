@@ -206,7 +206,7 @@ class DiscussionController extends Controller
 
         $this->item = $discussion;
 
-        return response()->json(['success' => __('messages.discussion.update_success'), 'refresh' => $this->getFieldsToRefresh($request)]);
+        return response()->json(['success' => __('messages.discussion.update_success'), 'updates' => $this->getFieldValuesToUpdate($request)]);
     }
 
     /**

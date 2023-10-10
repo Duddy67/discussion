@@ -269,7 +269,7 @@ class DiscussionController extends Controller
         //$category = Category::find($request->input('category_id'));
         //$category->discussions()->save($discussion);
 
-        //$refresh = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
+        //$updates = ['updated_at' => Setting::getFormattedDate($discussion->updated_at), 'updated_by' => auth()->user()->name, 'slug' => $discussion->slug];
 
         if ($request->input('_close', null)) {
             $discussion->safeCheckIn();
@@ -278,9 +278,9 @@ class DiscussionController extends Controller
             $query = array_merge($request->query(), ['id' => $id, 'slug' => $discussion->slug]);
             return response()->json(['redirect' => route('discussions.show', $query)]);
         }
-        $refresh = [];
+        $updates = [];
 
-        return response()->json(['success' => __('messages.discussion.update_success'), 'refresh' => $refresh]);
+        return response()->json(['success' => __('messages.discussion.update_success'), 'updates' => $updates]);
     }
 
     /**
