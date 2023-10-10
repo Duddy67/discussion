@@ -50,7 +50,7 @@ Route::resource($segments['discussions'], DiscussionController::class)->except([
 Route::get('/'.$segments['discussions'].'/{id}/{slug}', [DiscussionController::class, 'show'])->name('discussions.show');
 Route::get('/'.$segments['discussions'].'/'.$segments['categories'].'/{id}/{slug}', [DiscussionCategoryController::class, 'index'])->name('discussions.categories');
 
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
