@@ -30,6 +30,10 @@
         <input type="hidden" id="cancelEdit" value="{{ route('admin.discussions.cancel', $query) }}">
         <input type="hidden" id="close" name="_close" value="0">
 
+        @if (isset($discussion))
+            <input type="hidden" id="_dateFormat" value="{{ $dateFormat }}">
+        @endif
+
         @foreach ($dateFormats as $key => $value)
             <input type="hidden" name="_date_formats[{{ $key }}]" value="{{ $value }}">
         @endforeach
@@ -52,7 +56,7 @@
     <script type="text/javascript" src="{{ asset('/vendor/adminlte/plugins/daterangepicker/daterangepicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/vendor/tinymce/tinymce.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/vendor/codalia/c.ajax.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('/js/admin/daterangepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/js/daterangepicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/admin/form.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/admin/set.private.groups.js') }}"></script>
     <script type="text/javascript" src="{{ asset('/js/admin/disable.toolbars.js') }}"></script>

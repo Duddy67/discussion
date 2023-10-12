@@ -106,10 +106,11 @@ class DiscussionController extends Controller
         //$this->setFieldValues($fields, $discussion);
         $except = (!$discussion->canEdit()) ? ['destroy', 'save', 'saveClose'] : [];
         $actions = $this->getActions('form', $except);
+        $dateFormat = Setting::getValue('app', 'date_format');
         // Add the id parameter to the query.
         $query = array_merge($request->query(), ['discussion' => $id]);
 
-        return view('admin.discussion.form', compact('discussion', 'fields', 'actions', 'query'));
+        return view('admin.discussion.form', compact('discussion', 'fields', 'actions', 'dateFormat', 'query'));
     }
 
     /**
