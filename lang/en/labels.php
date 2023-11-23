@@ -231,6 +231,7 @@ return [
         'canonical_link' => 'Canonical link',
         'cookies_privacy' => 'Cookies & Privacy',
         'no_update' => 'No update yet',
+        'structured_data' => 'Structured data',
     ],
     'filter' => [
 	'search' => 'Search',
